@@ -1,7 +1,7 @@
 // BioPhi369 v0.8. Native Framefield scene JSON -> reviewed BioPhi v1 transform patches.
 // Nothing imports editable mesh topology, mechanical proof, or future keyframes.
 import { validateAssembly, patchComponent } from './assemblyData.js';
-import { framefieldPart } from './creativeBridge.js';
+import { framefieldPart, makeTaggedFramefieldName } from './creativeBridge.js';
 
 export const ROUNDTRIP_MAX_BYTES = 3_000_000;
 export const ROUNDTRIP_BACKUP_KEY = 'biophi369.roundtrip.rollback.v1';
@@ -15,11 +15,6 @@ const round = n=>Math.round(n*1e6)/1e6;
 
 // Native Framefield ids are deliberately *regenerated on import*, so the
 // marker in its editable name field is the only supported mapping authority.
-export function makeTaggedFramefieldName(part) {
-  const label='[BP369:'+part.id+']';
-  return label+' '+String(part.name||part.id).slice(0,65-label.length-1);
-}
-
 export function parseFramefieldReturn(text) {
   if(typeof text!=='string'||text.length>ROUNDTRIP_MAX_BYTES)throw Error('Framefield return must be JSON under 3 MB.');
   let raw;
