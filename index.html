@@ -26,7 +26,7 @@
         <span class="brand-mark" aria-hidden="true">Φ</span>
         <span><strong>BIOPHI<span class="brand-numeric">369</span></strong><small>THE BIOLOGICAL COMPUTER</small></span>
       </a>
-      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 01</span></span>
+      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 02</span></span>
     </header>
 
     <main>
@@ -70,11 +70,79 @@
             <label for="explode">Separate structures</label>
             <input id="explode" type="range" min="0" max="100" value="0" step="1">
             <div class="range-ends"><span>ASSEMBLED</span><span>EXPLODED VIEW</span></div>
+            <div class="hemisphere-picker" role="group" aria-label="Inspect hemispheres">
+              <span class="control-caption">HEMISPHERE FOCUS <small>Both sides participate in complex cognition</small></span>
+              <div class="segment-buttons">
+                <button class="segment-button active" type="button" data-hemisphere="both" aria-pressed="true">Both</button>
+                <button class="segment-button" type="button" data-hemisphere="left" aria-pressed="false">Left</button>
+                <button class="segment-button" type="button" data-hemisphere="right" aria-pressed="false">Right</button>
+              </div>
+            </div>
             <div class="control-buttons">
               <button id="motion" class="action secondary" type="button" aria-pressed="true">Pause motion</button>
               <button id="reset" class="action" type="button">Reset view ↺</button>
             </div>
           </div>
+
+          <section id="cfd-controls" class="cfd-panel" aria-label="CFD visual experiment controls" hidden>
+            <div class="cfd-heading">
+              <div><div class="label">CFD LAB / 0.2</div><h2>Imagination workbench</h2></div>
+              <span class="cfd-badge">CONCEPT MODEL</span>
+            </div>
+            <p>Manipulate a procedural point field and separate a virtual hardware or software system. These are <strong>invented geometric models</strong>, not recordings of thoughts or brain activity.</p>
+            <div class="preset-row" role="group" aria-label="CFD starting configurations">
+              <button type="button" class="preset-btn" data-preset="CFD spiral">CFD spiral</button>
+              <button type="button" class="preset-btn" data-preset="Nested lattice">Nested lattice</button>
+              <button type="button" class="preset-btn" data-preset="Bubble orbit">Bubble orbit</button>
+            </div>
+            <div class="cfd-selectors">
+              <label>System representation
+                <select id="cfd-view">
+                  <option value="hardware">Hardware: spatial components</option>
+                  <option value="software">Software: dependency graph</option>
+                </select>
+              </label>
+              <label>Pixel-field geometry
+                <select id="cfd-pattern">
+                  <option value="spiral">Spiral cloud</option>
+                  <option value="grid">Twisting lattice</option>
+                  <option value="bubble">Nested bubble shells</option>
+                </select>
+              </label>
+            </div>
+            <div class="cfd-sliders">
+              <label for="cfd-density">Point density <output id="cfd-density-value">1400</output></label>
+              <input id="cfd-density" type="range" min="200" max="2400" step="100" value="1400">
+              <label for="cfd-twist">Geometric twist <output id="cfd-twist-value">38</output></label>
+              <input id="cfd-twist" type="range" min="0" max="100" step="1" value="38">
+              <label for="cfd-depth">Field depth <output id="cfd-depth-value">55</output></label>
+              <input id="cfd-depth" type="range" min="0" max="100" step="1" value="55">
+              <label for="cfd-spin">Rotation speed <output id="cfd-spin-value">35</output></label>
+              <input id="cfd-spin" type="range" min="0" max="100" step="1" value="35">
+            </div>
+
+            <section class="recorder" aria-labelledby="recorder-title">
+              <div class="recorder-heading"><h3 id="recorder-title">Visualization recorder</h3><span id="frame-count">0 / 24 FRAMES</span></div>
+              <p>Save configurations as ordered keyframes. Playback visits these configurations; it does not capture neural signals or video.</p>
+              <div class="capture-row">
+                <label for="frame-label" class="visually-hidden">Name this keyframe</label>
+                <input id="frame-label" type="text" maxlength="60" placeholder="Name this frame (optional)">
+                <button id="capture-frame" type="button" class="action">+ Capture</button>
+              </div>
+              <ol id="frame-list" class="frame-list" aria-label="Recorded configurations"></ol>
+              <div class="recorder-buttons">
+                <button id="play-frames" type="button" class="action" disabled>▶ Play</button>
+                <button id="stop-frames" type="button" class="action secondary" disabled>■ Stop</button>
+                <button id="clear-frames" type="button" class="action secondary" disabled>Clear</button>
+              </div>
+              <div class="recorder-buttons">
+                <button id="export-frames" type="button" class="action secondary" disabled>Export JSON</button>
+                <label class="action secondary import-button" for="import-frames">Import JSON</label>
+                <input id="import-frames" class="visually-hidden" type="file" accept="application/json,.json" aria-label="Import CFD recording JSON">
+              </div>
+              <p id="cfd-status" class="cfd-status" role="status" aria-live="polite">Your frames are saved in this browser when storage is available. Export a JSON file to back them up.</p>
+            </section>
+          </section>
         </section>
 
         <aside class="panel detail-panel" aria-labelledby="detail-name">
@@ -114,9 +182,9 @@
           <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
         </article>
         <article class="note-card">
-          <div class="label">FIELD NOTES / 001</div>
+          <div class="label">FIELD NOTES / 002</div>
           <h2>From visualization to design.</h2>
-          <p>CFD mode represents a design exercise: picture an object, separate its parts, rotate them, and test the relationships. An imagined mechanism still needs engineering checks.</p>
+          <p>CFD mode now lets you adjust procedural geometry and record design keyframes. Captured configurations remain visual experiments, and imagined mechanisms still need engineering tests.</p>
         </article>
       </section>
     </main>
