@@ -1,5 +1,6 @@
 import { regions, byId, modes } from './brainData.js';
 import { createCFDUI } from './cfdUI.js';
+import { createAssemblyUI } from './assemblyUI.js';
 
 const $ = (selector) => document.querySelector(selector);
 const regionList = $('#region-list');
@@ -13,6 +14,7 @@ const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const state = { selected: 'cortex', mode: 'anatomy', explode: 0, hemisphere: 'both', motion: !motionPreference.matches };
 let atlas = null;
 let cfdUI = null;
+let assemblyUI = null;
 
 function setText(selector, value) {
   const target = $(selector);
@@ -49,12 +51,20 @@ function showMode(mode) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
-  setText('#mode-number', mode === 'anatomy' ? '01' : mode === 'analogy' ? '02' : '03');
+  setText('#mode-number', mode === 'anatomy' ? '01' : mode === 'analogy' ? '02' : mode === 'cfd' ? '03' : '04');
   setText('#mode-heading', modes[mode].heading);
   setText('#mode-description', modes[mode].description);
-  setText('#stage-mode', mode === 'cfd' ? 'CFD / MENTAL ROTATION' : mode === 'analogy' ? 'ANALOGY / METAPHOR' : 'ANATOMY / SCHEMATIC');
+  setText('#stage-mode', mode === 'builder' ? 'DESIGN STUDIO / EDITABLE ASSEMBLY' : mode === 'cfd' ? 'CFD / MENTAL ROTATION' : mode === 'analogy' ? 'ANALOGY / METAPHOR' : 'ANATOMY / SCHEMATIC');
   atlas?.setMode(mode);
   cfdUI?.setActive(mode === 'cfd');
+  assemblyUI?.setActive(mode === 'builder');
+  $('.workspace').classList.toggle('builder-active', mode === 'builder');
+  $('.regions-panel').hidden = mode === 'builder';
+  $('.detail-panel').hidden = mode === 'builder';
+  if (mode === 'builder' && assemblyUI) {
+    setExplode(assemblyUI.getModel().explode);
+    atlas?.setAssembly(assemblyUI.getModel());
+  }
   if (mode === 'cfd' && cfdUI) {
     const saved = cfdUI.getSettings();
     setExplode(saved.explode);
@@ -70,6 +80,7 @@ function setExplode(value) {
   setText('#explode-value', String(state.explode).padStart(2, '0') + '% EXPLODED');
   atlas?.setExplode(state.explode / 100);
   if (state.mode === 'cfd') cfdUI?.sync({ explode: state.explode });
+  if (state.mode === 'builder') assemblyUI?.setExplode(state.explode);
 }
 
 function setHemisphere(value) {
@@ -115,6 +126,23 @@ function buildRegions() {
 }
 
 buildRegions();
+assemblyUI = createAssemblyUI({
+  onChange: (model) => {
+    atlas?.setAssembly(model);
+    if (state.mode === 'builder') {
+      state.explode = model.explode;
+      explodeSlider.value = String(model.explode);
+      setText('#explode-value',String(model.explode).padStart(2,'0')+'% EXPLODED');
+      atlas?.setExplode(model.explode / 100);
+    }
+  },
+  onSelect: (id) => atlas?.setAssemblySelection(id),
+  onExplode: (value) => atlas?.setExplode(value),
+  onExportGLB: async () => {
+    if (!atlas) throw Error('3D scene has not initialized.');
+    return atlas.exportAssemblyGLB();
+  }
+});
 cfdUI = createCFDUI({
   onChange: (settings) => {
     setExplode(settings.explode);
@@ -141,13 +169,14 @@ resetButton.addEventListener('click', () => { setExplode(0); atlas?.reset(); });
 async function boot() {
   try {
     const module = await import('./scene.js');
-    atlas = module.createAtlas($('#viewport'), showRegion);
+    atlas = module.createAtlas($('#viewport'), showRegion, (id) => assemblyUI?.onSceneSelect(id));
     atlas.setSelected(state.selected);
     atlas.setMode(state.mode);
     atlas.setExplode(state.explode / 100);
     atlas.setMotion(state.motion);
     atlas.setHemisphere(state.hemisphere);
     atlas.setCFDSettings(cfdUI.getSettings());
+    atlas.setAssembly(assemblyUI.getModel());
     fallback.classList.add('hidden');
     motionButton.disabled = false;
     resetButton.disabled = false;
@@ -159,4 +188,4 @@ async function boot() {
   }
 }
 boot();
-window.addEventListener('pagehide', () => { cfdUI?.stop(); atlas?.dispose(); }, { once: true });
+window.addEventListener('pagehide', () => { cfdUI?.stop(); assemblyUI?.stop(); atlas?.dispose(); }, { once: true });
