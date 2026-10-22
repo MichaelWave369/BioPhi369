@@ -35,6 +35,7 @@ jobs:
           node --check src/assemblyData.js
           node --check src/assemblyScene.js
           node --check src/assemblyUI.js
+          node --check src/realityCheck.js
       - name: Run evidence-boundary tests
         run: npm test
       - name: Export static site

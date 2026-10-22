@@ -1,5 +1,18 @@
 # BioPhi369 · The Biological Computer
 
+## v0.4 · Reality Check Lab
+
+New **heuristic inspection** inside Engineering Bridge. Preserves all earlier modes and design-document compatibility.
+
+- Automatically screens **rest-pose** component pairs using conservative bounding-sphere envelopes for non-gear combinations. The sphere proxy can generate false positives and cannot prove mesh contact or clearance. Linked gear pairs use separate center-spacing checks because intended tooth flank contact can overlap bounding spheres.
+- For annotated gear–gear links, displays a **signed external-gear tooth ratio and follower RPM preview** (`follower RPM = -driver RPM × driver teeth / follower teeth`). A direct click applies that numerical suggestion only; it does *not* mechanically couple motion.
+- Flags nonparallel-looking gear axes, Y-plane offsets, approximate visual pitch distances, scale-versus-teeth inconsistencies and independent RPM mismatch. All approximations use arbitrary units and are **not involute-gear calculations**.
+- Provides **Align X/Y/Z**, **Place beside**, and **Nominal gear pitch** snaps for a selected part relative to another component. All actions are explicit, reversible through manual adjustment / saved assembly states, and enforce the same position bounds as the editor. The center-distance pitch snap assumes parallel Y-axis gears in the rest pose.
+- Displays caution and information findings in accessible selectable rows, plus counts of inspected parts and part pairs.
+- New deterministic and negative-control Node tests in `tests/realityCheck.test.mjs`.
+
+**Safety and evidence firewall:** There is no real physics engine, 3D collision mesh checker, swept-volume simulation, force/torque analysis, manufacturing tolerance solver, validated gear tooth module/pitch diameter model, clearance certification, or safety verdict. **Zero findings never means safe.** Visual inspection is only an early design aid; real mechanisms require measured geometry and independent engineering verification. The app performs no cognition measurements.
+
 ## v0.3 · Imagination-to-Engineering Bridge
 
 **New fourth mode: Engineering Bridge.** Turn an imagined assembly into individually editable, exportable **concept geometry** while preserving all of v0.1 and v0.2.

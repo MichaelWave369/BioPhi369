@@ -4,6 +4,7 @@ import {
   connectComponents, disconnectComponents, captureAssembly, applyAssemblyFrame,
   exportAssembly, parseAssembly
 } from './assemblyData.js';
+import { analyzeAssembly, snapAssembly } from './realityCheck.js';
 
 // A local-first, human-directed editor. No AI mind-reading or hardware actuation.
 export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB }) {
@@ -40,6 +41,7 @@ export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB })
     playing = false;
     activeFrame = -1;
     renderFrames();
+    renderReality();
   }
   function requireSelected() {
     return doc.parts.find(part => part.id === doc.selected) ?? null;
@@ -149,8 +151,91 @@ export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB })
     $('assembly-clear-frames').disabled=doc.frames.length===0||playing;
   }
 
+
+  function renderReality() {
+    const selected=requireSelected();
+    const target=$('reality-target');
+    const keep=target.value;
+    target.replaceChildren();
+    const alternatives=doc.parts.filter(p=>p.id!==doc.selected);
+    for(const part of alternatives) {
+      const option=document.createElement('option');
+      option.value=part.id;
+      option.textContent=part.name || part.id;
+      target.append(option);
+    }
+    if(alternatives.some(p=>p.id===keep)) target.value=keep;
+    target.disabled=!selected || alternatives.length===0;
+    panel.querySelectorAll('[data-snap]').forEach(button=>{
+      button.disabled=target.disabled || (button.dataset.snap==='gear-pitch' && (
+        selected?.type!=='gear' || doc.parts.find(p=>p.id===target.value)?.type!=='gear'));
+    });
+
+    const analysis=analyzeAssembly(doc);
+    const summary=$('reality-summary');
+    summary.classList.toggle('has-warnings',analysis.cautionCount>0);
+    summary.textContent=analysis.checkedParts+' components · '+analysis.checkedPairs+' pairs screened · '+
+      analysis.cautionCount+' caution'+(analysis.cautionCount===1?'':'s')+
+      '. '+(analysis.cautionCount?'Review the findings below.':'No flags from these limited checks; NOT a safety clearance.');
+
+    const ratios=$('reality-ratios');ratios.replaceChildren();
+    if(!analysis.ratios.length){
+      const p=document.createElement('p');p.className='reality-detail';
+      p.textContent='Link two gears to display a provisional external-gear ratio.';
+      ratios.append(p);
+    }
+    for(const ratio of analysis.ratios) {
+      const card=document.createElement('div');card.className='reality-ratio-card';
+      const label=document.createElement('strong');
+      label.textContent=ratio.driver+' → '+ratio.follower;
+      const stat=document.createElement('span');
+      stat.textContent=ratio.driverTeeth+':'+ratio.followerTeeth+' teeth · ratio '+
+        ratio.ratio+' · preview '+ratio.expectedRPM+' RPM · assigned '+ratio.assignedRPM+' RPM';
+      const action=document.createElement('button');
+      action.type='button';action.className='action secondary';
+      action.textContent='Apply '+ratio.expectedRPM+' RPM';
+      action.disabled=playing || Math.abs(ratio.expectedRPM)>120;
+      action.title='Apply this suggested speed only. No gear train solver or mesh constraint is applied.';
+      action.addEventListener('click',()=>{
+        try {
+          stop();
+          doc=patchComponent(doc,ratio.to,{rpm:ratio.expectedRPM});
+          changed('Assigned nominal follower RPM. This remains an independent visual motor setting.');
+        } catch(error) { status(error.message); }
+      });
+      card.append(label,stat,action);ratios.append(card);
+    }
+    const findings=$('reality-findings');findings.replaceChildren();
+    if(!analysis.findings.length) {
+      const li=document.createElement('li');
+      li.className='reality-clear';
+      li.textContent='No heuristic findings at this rest pose. The design remains unverified.';
+      findings.append(li);
+    }
+    for(const finding of analysis.findings) {
+      const li=document.createElement('li');
+      li.className='reality-finding '+(finding.severity==='caution'?'caution':'info');
+      const label=document.createElement('span');
+      label.className='reality-severity';
+      label.textContent=finding.severity==='caution'?'CHECK':'INFO';
+      const detail=document.createElement('div');
+      const title=document.createElement('strong');title.textContent=finding.title;
+      const desc=document.createElement('p');desc.textContent=finding.detail;
+      detail.append(title,desc);
+      li.append(label,detail);
+      if(finding.ids.length>0){
+        const jump=document.createElement('button');
+        jump.type='button';jump.textContent='Select';
+        jump.setAttribute('aria-label','Select component associated with '+finding.title);
+        jump.addEventListener('click',()=>select(finding.ids[0]));
+        li.append(jump);
+      }
+      findings.append(li);
+    }
+  }
+
   function render(){
-    renderList();renderInspector();renderLinks();renderFrames();
+    renderList();renderInspector();renderLinks();renderFrames();renderReality();
   }
 
   function setExplode(value) {
@@ -177,6 +262,27 @@ export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB })
     a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),5000);
   }
+
+  panel.querySelectorAll('[data-snap]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      if(!doc.selected || !$('reality-target').value)return;
+      try {
+        stop();
+        const targetId=$('reality-target').value;
+        const targetLabel=doc.parts.find(p=>p.id===targetId)?.name || targetId;
+        doc=snapAssembly(doc,doc.selected,targetId,button.dataset.snap);
+        changed('Snapped '+button.dataset.snap+' relative to '+targetLabel+'. Review the updated screening results.');
+      } catch(error) { status('Snap refused: '+error.message); }
+    });
+  });
+  $('reality-target').addEventListener('change',()=>{
+    panel.querySelectorAll('[data-snap]').forEach(button=>{
+      const current=requireSelected();
+      const target=doc.parts.find(p=>p.id===$('reality-target').value);
+      button.disabled=!current || !target ||
+        (button.dataset.snap==='gear-pitch' && (current.type!=='gear'||target.type!=='gear'));
+    });
+  });
 
   panel.querySelectorAll('[data-shape]').forEach(button=>{
     button.addEventListener('click',()=>{
