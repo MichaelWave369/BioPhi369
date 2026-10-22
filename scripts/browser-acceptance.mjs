@@ -221,7 +221,7 @@ try {
     await page.locator('#bridge-export-framefield').click();
     const download=await promise;
     const scene=JSON.parse(await readFile(await download.path(),'utf8'));
-    assert.match(scene.objects[0].name,/^\\[BP369:part-1\\]/);
+    assert.match(scene.objects[0].name,/^\[BP369:part-1\]/);
     // Mimic Framefield Studio recreating UUIDs, retaining the name tag.
     scene.objects.forEach((obj,index)=>obj.id='generated-in-framefield-'+index);
     const rest=scene.objects[0].keyframes.find(k=>k.frame===0);
