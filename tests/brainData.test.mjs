@@ -29,7 +29,7 @@ test('Scientific firewall rejects left/right CPU/GPU and pineal-is-RAM myths', (
 });
 
 test('Conceptual mode inventory and all diagram links refer to valid objects', () => {
-  assert.deepEqual(Object.keys(modes), ['anatomy', 'analogy', 'cfd']);
+  assert.deepEqual(Object.keys(modes), ['anatomy', 'analogy', 'cfd', 'builder']);
   for (const mode of Object.values(modes)) {
     assert.ok(mode.heading.length > 6);
     assert.ok(mode.description.length > 30);

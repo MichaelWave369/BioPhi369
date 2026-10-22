@@ -98,6 +98,11 @@ export const modes = {
     name: 'CFD workshop',
     heading: 'Mental rotation laboratory',
     description: 'A conceptual exploded-view object illustrates visual-spatial manipulation. This depicts an idea, not a scan of anyone’s mind.'
+  },
+  builder: {
+    name: 'Engineering bridge',
+    heading: 'Turn a visualization into an editable assembly',
+    description: 'Model primitive gears and components in 3D, annotate connections, preview rotations, record configurations, and export a rest-pose GLB. This is conceptual CAD, not validated engineering.'
   }
 };
 

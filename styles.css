@@ -85,3 +85,60 @@ a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-vis
 .cfd-status{padding-top:6px;font-size:11px!important;color:#96bac2!important;margin-bottom:0!important}
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 @media(max-width:470px){.cfd-panel{padding:16px}.cfd-heading h2{font-size:20px}.cfd-badge{font-size:8px}.cfd-selectors{grid-template-columns:1fr}.recorder-buttons .action{min-width:81px}.capture-row input{font-size:11px}}
+
+/* v0.3: the fourth mode is an actual assembly editor, not a neural scan. */
+.workspace.builder-active{display:block}
+.workspace.builder-active>.regions-panel,.workspace.builder-active>.detail-panel{display:none}
+.workspace.builder-active>.stage-column{width:100%}
+.workspace.builder-active .stage{min-height:490px}
+.workspace.builder-active .viewport{height:490px}
+.assembly-panel{padding:26px;border:1px solid #547c7755;border-radius:11px;background:linear-gradient(142deg,#162a36,#0f1c2a);min-width:0}
+.assembly-head{display:flex;justify-content:space-between;align-items:flex-start;gap:13px;margin-bottom:23px}
+.assembly-head h2{font-size:clamp(21px,3.1vw,31px);margin:8px 0 9px;line-height:1.2}
+.assembly-head p{font-size:13px;max-width:680px;color:#a9bdc8;line-height:1.7;margin:0}
+.assembly-head p strong{color:#e8e1c9}
+.assembly-panel .label{color:var(--mint)}
+.assembly-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.assembly-col{background:#0d1b2b9c;border:1px solid #32516578;border-radius:9px;padding:18px;min-width:0}
+.shape-palette{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0 10px}
+.shape-palette button{border:1px solid #4e7c80;background:#18313e;color:#d5edf0;border-radius:6px;min-height:42px;padding:9px 12px;font-size:12px;font-weight:650}
+.shape-palette button:hover{background:#264b52}
+.shape-palette button:disabled{opacity:.44;cursor:not-allowed}
+.assembly-minor{color:#95aabb;font-size:12px;line-height:1.7;margin:8px 0 18px}
+.mini-count{color:#91b7bd;margin-left:7px;font-size:10px}
+.assembly-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;margin:13px 0}
+.assembly-part{border:1px solid #334e5e;background:#112538;color:#d2e0e8;border-radius:6px;min-height:56px;padding:9px;display:grid;grid-template-columns:22px minmax(0,1fr);text-align:left;gap:3px 6px;font-size:12px;align-items:center;min-width:0}
+.assembly-part span:nth-child(2){text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.assembly-part-icon{grid-row:span 2;color:#8de0cd;font-size:19px}
+.assembly-part small{grid-column:2;font-size:9px;letter-spacing:.5px;color:#90a7b5}
+.assembly-part.active{border-color:#6dd7b6;background:#22413f;color:#ecfff8}
+.assembly-actions{display:flex;gap:7px;margin:10px 0 20px}
+.assembly-actions .action:disabled{opacity:.4;cursor:not-allowed}
+.spacer-label{display:block;margin:20px 0 11px}
+.connection-row{display:flex;gap:7px;margin-bottom:12px}
+.assembly-panel input,.assembly-panel select{min-width:0;background:#0a1928;color:#e5f5f5;border:1px solid #406171;border-radius:6px;padding:8px 10px;font-size:14px;min-height:43px;width:100%}
+.assembly-panel input:disabled,.assembly-panel select:disabled{opacity:.45}
+.connection-row select{flex:1}
+.connection-row button{flex:0 0 auto}
+.assembly-links{padding:0;list-style:none;margin:0;display:flex;flex-direction:column;gap:6px}
+.assembly-links li{display:flex;gap:9px;align-items:center;justify-content:space-between;color:#b8cfd7;border:1px solid #314a57;padding:5px 9px;border-radius:5px;font-size:12px}
+.assembly-links button{border:1px solid #6e5156;background:transparent;color:#e9b6b0;border-radius:4px;min-width:33px;min-height:33px}
+.assembly-inspector>label{display:block;color:#b6cfce;font-size:12px}
+.assembly-inspector>label input{display:block;margin-top:5px}
+.assembly-fields{display:flex;gap:12px;margin-top:12px;min-width:0}
+.assembly-fields fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:8px;border:1px solid #385a6c;border-radius:7px;min-width:0;flex:1}
+.assembly-fields fieldset legend{font-size:10px;color:#97cbbf;padding:0 5px}
+.assembly-fields label{display:block;min-width:0;color:#a9c6d0;font-size:11px}
+.assembly-fields input{margin-top:5px;padding:7px 5px;min-height:43px;width:100%}
+.scalar-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.scalar-fields label{min-width:0}
+.scalar-fields input{width:100%}
+.assembly-panel .capture-row{margin-top:11px}
+.assembly-panel .frame-list{max-height:190px}
+.assembly-status{padding:13px;background:#173437;border-left:3px solid #79debd;color:#dcf6e9;border-radius:5px;font-size:12px;margin:20px 0 14px;line-height:1.6}
+.assembly-panel .recorder-buttons{flex-wrap:wrap}
+.assembly-panel .recorder-buttons .action:disabled{opacity:.45;cursor:not-allowed}
+.assembly-panel .frame-list:empty:before{content:"No keyframes yet. Capture a design state to start a sequence.";display:block;font-size:11px;color:#8da9b7;padding:10px}
+.assembly-panel .action{font-size:11px}
+@media(max-width:860px){.assembly-grid{grid-template-columns:1fr}.assembly-col{padding:16px}.workspace.builder-active .stage,.workspace.builder-active .viewport{height:440px;min-height:440px}}
+@media(max-width:520px){.assembly-panel{padding:14px}.assembly-head{display:block}.assembly-head .cfd-badge{display:inline-block;margin-top:9px}.workspace.builder-active .stage,.workspace.builder-active .viewport{height:365px;min-height:365px}.assembly-fields{flex-direction:column}.scalar-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.assembly-actions{flex-wrap:wrap}.assembly-grid{gap:10px}.mode-tabs .mode-tab{flex:1 1 calc(50% - 5px)}}

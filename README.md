@@ -1,5 +1,20 @@
 # BioPhi369 · The Biological Computer
 
+## v0.3 · Imagination-to-Engineering Bridge
+
+**New fourth mode: Engineering Bridge.** Turn an imagined assembly into individually editable, exportable **concept geometry** while preserving all of v0.1 and v0.2.
+
+- Procedural 3D **gear, ring, shaft, block and bubble** primitives. Select via raycast or the accessible component tree; add/duplicate/delete, name and adjust position XYZ, rotation XYZ, scale and visual RPM. Up to 24 components.
+- Connect two parts with a labeled *visual relationship* and remove links. **Links are not joints, motor constraints or gear-contact calculations.**
+- Play an independent per-component rotation preview, rotate/zoom the assembly and control the global exploded view. Independent RPM values are assigned by the user; **no torque, inertia, collision, tooth meshing, tolerance or physical performance is computed**.
+- Save up to 12 whole-assembly keyframes, play snapshots in order, load snapshots, and clear frames. This is a stepped configuration sequencer, not continuous mechanical motion interpolation.
+- Browser-local autosave plus robust, bounded **JSON import/export** for editable project state and **binary glTF (.GLB) mesh export** for use in compatible 3D tools, including Blender. The GLB exports the **unexploded rest pose**, not animation or visual link annotations. Frame data remains in JSON.
+- Zero new npm dependencies: Three.js GLTFExporter is loaded from the already pinned CDN only when the user requests a GLB. WebGL and GLB export require a compatible browser and network access.
+
+**Engineering ethics:** Editable mesh geometry is not a manufacturable CAD solid. Mesh scale is in arbitrary scene units. Treat all prototypes as artistic concepts until real dimensional constraints, collision, forces, materials, fabrication tolerances and independent verification are applied. The application is not a neuroscience measuring instrument. No user designs are transmitted to any server.
+
+**Versioned document source:** `src/assemblyData.js` (validated model, no executable import), `src/assemblyScene.js` (3D geometry and GLB export), `src/assemblyUI.js` (local-first editing and recording), `tests/assemblyData.test.mjs` (exact constraints, controls and replay).
+
 ## v0.2 · CFD Imagination Workbench
 
 **What is new:**
