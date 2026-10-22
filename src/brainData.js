@@ -26,7 +26,7 @@ export const regions = [
   {
     id: 'parietal', name: 'Frontoparietal networks', short: 'Spatial working memory',
     category: 'Cognition', computer: 'RAM / active workspace',
-    description: 'Frontal and parietal networks help maintain and manipulate information over short periods, including spatial relationships and mental rotation.',
+    description: 'Frontal and parietal networks support working memory by helping maintain and manipulate information over short periods, including spatial relationships and mental rotation.',
     analogy: 'Working memory has RAM-like properties: information is actively held and updated.',
     boundary: 'Working memory is distributed activity, not a physical RAM stick or the pineal gland.',
     position: [0.36, 0.77, -0.12], radius: 0.18, color: '#6dd9c5'
