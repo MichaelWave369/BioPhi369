@@ -103,6 +103,19 @@ test('Stale preview and invalid selection fail closed without mutation',()=>{
   assert.throws(()=>applyReviewedRoundTrip(doc,review,['part-5']),/unreviewed/);
 });
 
+test('Selection and presentation-only explode changes do not invalidate an otherwise safe review',()=>{
+  const doc=initialAssembly(),scene=exported(doc);
+  key(scene.objects[0]).position=[1,0,0];
+  const review=inspectRoundTrip(doc,scene);
+  const selected=copy(doc);
+  selected.selected='part-2';
+  selected.explode=25;
+  const next=applyReviewedRoundTrip(selected,review,['part-1']);
+  assert.equal(next.selected,'part-2');
+  assert.equal(next.explode,25);
+  assert.equal(next.parts[0].position.x,1);
+});
+
 test('Invalid inputs fail before they can produce proposed changes',()=>{
   const doc=initialAssembly(),scene=exported(doc);
   assert.throws(()=>parseFramefieldReturn('{invalid'),/Invalid Framefield/);
