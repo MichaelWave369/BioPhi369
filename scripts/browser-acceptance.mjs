@@ -153,6 +153,14 @@ try {
     assert.equal(data.objects.length,2);
     assert.ok(data.objects[0].geometry.vertices.length>4);
     assert.equal(data.objects[0].keyframes.length,241);
+    if(process.env.BIOPHI_TEST_TARGETS==='1'){
+      const {validateProject}=await import('../.external/framefield/src/scene.js');
+      const imported=validateProject(data);
+      assert.equal(imported.objects.length,2);
+      assert.equal(imported.objects[0].keyframes.length,241);
+      assert.ok(imported.objects[0].geometry.faces.length>100);
+      console.log('PASS Actual Framefield Studio native validateProject importer');
+    }
   });
 
   await step('PixelForge-specific GLB export is a valid static glTF binary',async()=>{
@@ -163,6 +171,14 @@ try {
     const bytes=await readFile(await file.path());
     assert.equal(bytes.subarray(0,4).toString(),'glTF');
     assert.equal(bytes.readUInt32LE(4),2);
+    if(process.env.BIOPHI_TEST_TARGETS==='1'){
+      const {decodeGlbMesh}=await import('../.external/pixelforge/vr-studio/glb-mesh.js');
+      const binary=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+      const result=decodeGlbMesh(binary);
+      assert.ok(result.meshCount>=1);
+      assert.equal(result.status,'STATIC_GEOMETRY_PREVIEW_ONLY');
+      console.log('PASS Actual PixelForge VR Studio static GLB decoder');
+    }
   });
 
   await step('Bridge ZIP contains manifest, scene, GLB, source and SHA-256 receipts',async()=>{
