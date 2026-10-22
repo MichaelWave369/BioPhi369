@@ -1,0 +1,49 @@
+name: BioPhi369 browser acceptance gauntlet
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: biophi369-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out BioPhi369
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser test dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build static site
+        run: npm run build
+      - name: Run browser acceptance gauntlet
+        env:
+          BIOPHI_BASE_URL: http://127.0.0.1:4173/
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist &
+          SITE_PID=$!
+          trap 'kill "$SITE_PID" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/browser-acceptance.mjs
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BioPhi369-browser-gauntlet-failure
+          path: browser-acceptance-failure.png
+          if-no-files-found: ignore
