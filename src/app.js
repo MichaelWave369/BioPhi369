@@ -3,6 +3,7 @@ import { createCFDUI } from './cfdUI.js';
 import { createAssemblyUI } from './assemblyUI.js';
 import { createDigitalTwinUI } from './digitalTwinUI.js';
 import { createCreativeBridgeUI } from './creativeBridgeUI.js';
+import { createRoundTripUI } from './roundTripUI.js';
 
 const $ = (selector) => document.querySelector(selector);
 const regionList = $('#region-list');
@@ -19,6 +20,7 @@ let cfdUI = null;
 let assemblyUI = null;
 let twinUI = null;
 let bridgeUI = null;
+let roundTripUI = null;
 
 function setText(selector, value) {
   const target = $(selector);
@@ -155,6 +157,12 @@ bridgeUI = createCreativeBridgeUI({
     if (!atlas) throw Error('3D scene has not initialized.');
     return atlas.exportAssemblyGLB();
   }
+});
+roundTripUI = createRoundTripUI({
+  getModel: () => assemblyUI.getModel(),
+  commitReview: (review, ids) => assemblyUI.commitRoundTrip(review,ids),
+  hasBackup: () => assemblyUI.hasRoundTripBackup(),
+  restoreBackup: () => assemblyUI.restoreRoundTripBackup()
 });
 twinUI = createDigitalTwinUI({
   getModel: () => assemblyUI.getModel(),
