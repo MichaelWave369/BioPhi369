@@ -5,6 +5,7 @@ import {
   exportAssembly, parseAssembly
 } from './assemblyData.js';
 import { analyzeAssembly, snapAssembly } from './realityCheck.js';
+import { applyReviewedRoundTrip, ROUNDTRIP_BACKUP_KEY } from './roundTrip.js';
 
 // A local-first, human-directed editor. No AI mind-reading or hardware actuation.
 export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB }) {
@@ -366,9 +367,50 @@ export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB })
     finally{button.disabled=false;button.textContent='Export .GLB';}
   });
 
+  function commitRoundTrip(review, ids) {
+    // Derive and validate the complete replacement before writing either key.
+    const next=applyReviewedRoundTrip(doc,review,ids);
+    const snapshot=exportAssembly(doc),nextText=exportAssembly(next);
+    try {
+      localStorage.setItem(ROUNDTRIP_BACKUP_KEY,snapshot);
+      if(localStorage.getItem(ROUNDTRIP_BACKUP_KEY)!==snapshot)
+        throw Error('Rollback snapshot could not be verified.');
+      localStorage.setItem(ASSEMBLY_KEY,nextText);
+      if(localStorage.getItem(ASSEMBLY_KEY)!==nextText)
+        throw Error('New document could not be verified in local storage.');
+    }catch(error){
+      // Preserve working memory and, where possible, revert persistent primary.
+      try{localStorage.setItem(ASSEMBLY_KEY,snapshot);}catch{}
+      throw Error('Round trip refused: could not save a verified local rollback and new design. '+error.message);
+    }
+    stop();doc=next;render();onChange(copy(doc));
+    status('Applied '+ids.length+' explicitly approved Framefield transform review(s). Original local assembly backed up for rollback.');
+    return copy(doc);
+  }
+  function hasRoundTripBackup(){
+    try { const text=localStorage.getItem(ROUNDTRIP_BACKUP_KEY);return !!text && !!parseAssembly(text); }
+    catch{return false;}
+  }
+  function restoreRoundTripBackup(){
+    let backup;
+    try{
+      const text=localStorage.getItem(ROUNDTRIP_BACKUP_KEY);
+      if(!text)throw Error('No round-trip rollback saved.');
+      backup=parseAssembly(text);
+      localStorage.setItem(ASSEMBLY_KEY,exportAssembly(backup));
+    }catch(error){throw Error('Rollback refused: '+error.message);}
+    stop();doc=backup;render();onChange(copy(doc));
+    try{localStorage.removeItem(ROUNDTRIP_BACKUP_KEY);}catch{}
+    status('Restored the local pre-round-trip assembly backup. Frames and links are back.');
+    return copy(doc);
+  }
+
   load();render();
   return {
     getModel:()=>copy(doc),
+    commitRoundTrip,
+    hasRoundTripBackup,
+    restoreRoundTripBackup,
     onSceneSelect:id=>select(id),
     setExplode,
     setActive(value) {
