@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { regions, links } from './brainData.js';
+import { createCFDLayer } from './cfdEngine.js';
+import { normalizeCFDSettings } from './cfdState.js';
 
 export function createAtlas(viewport, onSelect) {
   const scene = new THREE.Scene();
@@ -165,6 +167,9 @@ export function createAtlas(viewport, onSelect) {
     cfdParts.push(pivot);
   }
   workshop.visible = false;
+  const cfdLayer = createCFDLayer(THREE, workshop, trackGeometry, trackMaterial);
+  let hemisphereView = 'both';
+  let cfdSettings = normalizeCFDSettings();
 
   let selected = 'cortex';
   let mode = 'anatomy';
@@ -178,7 +183,7 @@ export function createAtlas(viewport, onSelect) {
     shellData.forEach(({ shell, sign }) => {
       shell.position.x = sign * (0.5 + explode * 0.88);
       shell.position.y = 0.19;
-      shell.material.opacity = mode === 'analogy' ? 0.12 : 0.18;
+      shell.material.opacity = (hemisphereView !== 'both' && (hemisphereView === 'left' ? sign > 0 : sign < 0)) ? 0.035 : (mode === 'analogy' ? 0.12 : 0.18);
     });
     markers.forEach(({ root, base, index }) => {
       const outward = scratch.copy(base);
@@ -192,6 +197,7 @@ export function createAtlas(viewport, onSelect) {
     });
     linkGeometry.attributes.position.needsUpdate = true;
     linkGeometry.computeBoundingSphere();
+    cfdLayer.setExplode(explode);
     cfdParts.forEach((part, i) => {
       const angle = (i / cfdParts.length) * Math.PI * 2;
       const orbit = 0.75 + explode * 1.13;
@@ -217,6 +223,7 @@ export function createAtlas(viewport, onSelect) {
     mode = value;
     brain.visible = mode !== 'cfd';
     workshop.visible = mode === 'cfd';
+    cfdBase.visible = cfdSettings.view === 'hardware';
     orbitRing.visible = mode !== 'cfd';
     layout();
   }
@@ -228,6 +235,18 @@ export function createAtlas(viewport, onSelect) {
   }
 
   function setMotion(value) { motion = Boolean(value); }
+
+  function setHemisphere(value) {
+    hemisphereView = ['left','right','both'].includes(value) ? value : 'both';
+    layout();
+  }
+
+  function setCFDSettings(input) {
+    cfdSettings = normalizeCFDSettings(input);
+    cfdLayer.setSettings(cfdSettings);
+    cfdBase.visible = cfdSettings.view === 'hardware';
+    setHemisphere(cfdSettings.hemisphere);
+  }
 
   function reset() {
     camera.position.set(3.5, 2.1, 4.7);
@@ -275,8 +294,9 @@ export function createAtlas(viewport, onSelect) {
     const delta = Math.min(0.05, clock.getDelta());
     if (motion) {
       if (mode === 'cfd') {
-        cfdBase.rotation.y += delta * 0.24;
-        cfdBase.rotation.x += delta * 0.09;
+        cfdBase.rotation.y += delta * (0.03 + (cfdSettings.spin / 100) * 0.42);
+        cfdBase.rotation.x += delta * (cfdSettings.spin / 100) * 0.08;
+        cfdLayer.tick(delta, motion);
       } else {
         brain.rotation.y += delta * 0.11;
         orbitals.rotation.y -= delta * 0.013;
@@ -306,5 +326,5 @@ export function createAtlas(viewport, onSelect) {
     canvas.remove();
   }
 
-  return { setSelected, setMode, setExplode, setMotion, reset, dispose, get motion() { return motion; } };
+  return { setSelected, setMode, setExplode, setMotion, setHemisphere, setCFDSettings, reset, dispose, get motion() { return motion; } };
 }
