@@ -146,7 +146,7 @@
           </section>
           <section id="assembly-panel" class="assembly-panel" aria-labelledby="assembly-heading" hidden>
             <div class="assembly-head">
-              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.4</div>
+              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.5</div>
                 <h2 id="assembly-heading">Imagination → engineering</h2>
                 <p>Make a 3D assembly, inspect components, animate independent rotations, and save editable designs. <strong>Conceptual design only.</strong> Reality Check adds approximate spacing screens, not a contact, stress, or collision solver.</p></div>
               <span class="cfd-badge">EXPERIMENTAL CAD</span>
@@ -245,6 +245,55 @@
               <ul id="reality-findings" class="reality-findings"></ul>
               <p class="reality-detail">Conservative bounds can flag false positives. Rotated mesh intersection, swept motion, torque, stresses, tooth-module compatibility, materials and manufacturing tolerances are not checked. No outcome means the design is safe or manufacturable.</p>
             </section>
+            <section class="twin-panel" id="twin-panel" aria-labelledby="twin-title">
+              <div class="twin-header">
+                <div><span class="label">08 / EXPERIMENTAL DIGITAL TWIN</span>
+                  <h3 id="twin-title">Motion & Reality Ledger <small>v0.5</small></h3></div>
+                <span class="twin-status-tag">PREVIEW ONLY</span>
+              </div>
+              <p>Animate constrained-looking gear relationships, inspect approximate mesh surface overlaps, and keep a provenance ledger. No physical performance, load, wear, collision-free motion or manufacturing safety is certified.</p>
+              <div class="twin-layout">
+                <div class="twin-config">
+                  <label for="twin-mode">Motion interpretation</label>
+                  <select id="twin-mode">
+                    <option value="coupled">Gear-coupled preview (eligible links only)</option>
+                    <option value="independent">Independent component RPMs</option>
+                  </select>
+                  <label for="twin-driver">Driver gear</label>
+                  <select id="twin-driver"></select>
+                  <label for="twin-speed">Playback rate <output id="twin-speed-value">1.0×</output></label>
+                  <input id="twin-speed" type="range" min="0.25" max="2" step="0.25" value="1">
+                  <div class="twin-controls">
+                    <button type="button" id="twin-play" class="action">▶ Play</button>
+                    <button type="button" id="twin-pause" class="action secondary" disabled>Ⅱ Pause</button>
+                    <button type="button" id="twin-reset" class="action secondary">↺ Reset</button>
+                  </div>
+                  <label for="twin-time">Timeline <output id="twin-time-value">0.00 / 30.00 s</output></label>
+                  <input id="twin-time" type="range" min="0" max="30" step="0.05" value="0">
+                  <p class="twin-small">Scrub a bounded, deterministic 30-second conceptual sequence. Playback modifies only the visual pose, not the stored component geometry.</p>
+                </div>
+                <div class="twin-inspection">
+                  <div class="label">SOLVER STATUS / CONSERVATIVE</div>
+                  <div id="twin-motion-status" class="twin-motion-status" role="status">Awaiting motion graph.</div>
+                  <ul id="twin-motion-findings" class="twin-findings"></ul>
+                  <div class="twin-controls">
+                    <button type="button" id="twin-mesh-scan" class="action secondary">Inspect mesh surfaces</button>
+                    <button type="button" id="twin-receipt" class="action secondary">Record reality receipt</button>
+                  </div>
+                  <div id="twin-mesh-results" class="twin-mesh-results" role="status" aria-live="polite">Run a static mesh scan on the assembled rest pose. Geometric test coverage is limited.</div>
+                </div>
+              </div>
+              <div class="twin-ledger">
+                <div class="twin-ledger-head">
+                  <h4>Reality Ledger <small>locally stored / provenance-tagged</small></h4>
+                  <div class="twin-controls">
+                    <button type="button" id="twin-export-ledger" class="action secondary">Export receipts</button>
+                    <button type="button" id="twin-clear-ledger" class="action secondary">Clear local ledger</button>
+                  </div>
+                </div>
+                <ol id="twin-receipts" class="twin-receipts"></ol>
+              </div>
+            </section>
             <p class="assembly-status" id="assembly-status" role="status" aria-live="polite">Two example gears are ready. Add a part or select a shape to edit.</p>
             <p class="assembly-minor"><strong>Integrity boundary:</strong> Exported GLB is an editable mesh scene suitable for tools supporting glTF 2.0, including Blender. No tolerance, tooth contact, structural or safety claim is made. Third-party app support requires independent validation.</p>
           </section>
@@ -287,7 +336,7 @@
           <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
         </article>
         <article class="note-card">
-          <div class="label">FIELD NOTES / 004</div>
+          <div class="label">FIELD NOTES / 005</div>
           <h2>From visualization to design.</h2>
           <p>CFD mode now lets you adjust procedural geometry and record design keyframes. Captured configurations remain visual experiments, and imagined mechanisms still need engineering tests.</p>
         </article>
