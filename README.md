@@ -1,10 +1,24 @@
 # BioPhi369 · The Biological Computer
 
+## v0.2 · CFD Imagination Workbench
+
+**What is new:**
+
+- Three procedural bounded point-field geometries (spiral cloud, twisting lattice, nested bubble shells) with density, twist, depth and rotation controls.
+- Switch the schematic exploded object between a hardware view and a software dependency-graph view.
+- Inspect left/right/both schematic hemispheres without claiming a left-CPU/right-GPU division.
+- Capture up to **24 named keyframes**, review them, replay them in order (1.5 seconds per frame), delete or clear them.
+- Keyframes are saved in browser localStorage when available; users can **export/import a versioned JSON recording**. Import validates shape, bounds, length and date fields and rejects oversized files (>100 KB). Import replaces the local recording; nothing is sent to a server.
+- Separate deterministic geometry and schema tests, with no WebGL or third-party package needed for Node CI.
+
+**Boundaries:** A CFD rendering is an interactive visualization design aid, **not direct observation of mental imagery**, EEG, a brain scan, or a physical CFD (computational fluid dynamics) solver. Software blocks are illustrative relationships, not a live program execution or a dependency parser. Playback switches between saved settings; it does not export video. Both cerebral hemispheres participate in many cognitive functions. The biological UI uses computer hardware terms as metaphors only.
+
+
 A mobile-friendly, interactive, three-dimensional **schematic** of brain networks, designed around a playful question: *What if the mind's visualization process felt like opening a machine?*
 
 **Live site after Pages deployment:** https://michaelwave369.github.io/BioPhi369/
 
-## Version 0.1 · What works
+## Version 0.1 · Existing foundations
 
 - Rotate and zoom an original procedural 3D brain-network model in the browser.
 - Choose one of ten brain structures; inspect what it does, its computer metaphor, and exactly where that metaphor breaks.
@@ -29,7 +43,9 @@ A dependency-free static application (no build framework), with Three.js 0.180.0
 - src/brainData.js: source-of-truth research labels and analogy boundaries.
 - src/scene.js: WebGL scene, interaction, exploded layout and motion.
 - src/app.js: accessible controls and detail-panel state.
-- scripts/build.mjs, tests/*.test.mjs: offline build and quality checks.
+- src/cfdEngine.js and src/cfdState.js: geometric workbench and serializable control contract.
+- src/cfdUI.js: local-only recorder and browser control surface.
+- scripts/build.mjs, tests/*.test.mjs: offline build, deterministic point test, schema checks and research-boundary assertions.
 - .github/workflows/: Node quality gate and static GitHub Pages deployment.
 
 ## Local development
