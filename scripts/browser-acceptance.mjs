@@ -34,7 +34,7 @@ async function triggerRange(selector,value){
 try {
   await step('Home loads and initializes a real WebGL atlas',async()=>{
     await page.goto(base,{waitUntil:'domcontentloaded'});
-    await page.locator('#stage-fallback.hidden').waitFor({timeout:30000});
+    await page.locator('#stage-fallback').waitFor({state:'hidden',timeout:30000});
     assert.equal(await page.locator('#viewport canvas').count(),1);
     assert.match(await page.title(),/BioPhi369/);
   });
