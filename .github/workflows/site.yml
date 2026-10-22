@@ -39,6 +39,9 @@ jobs:
           node --check src/digitalTwin.js
           node --check src/digitalTwinUI.js
           node --check src/meshInspection.js
+          node --check src/creativeBridge.js
+          node --check src/creativeBridgePack.js
+          node --check src/creativeBridgeUI.js
       - name: Run evidence-boundary tests
         run: npm test
       - name: Export static site
