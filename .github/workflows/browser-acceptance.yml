@@ -18,6 +18,26 @@ jobs:
     steps:
       - name: Check out BioPhi369
         uses: actions/checkout@v4
+      - name: Check out Framefield Studio importer contract
+        uses: actions/checkout@v4
+        with:
+          repository: MichaelWave369/FramefieldStudio
+          ref: bf6261e60bc58018cd7171f875d582a9e6665106
+          path: .external/framefield
+          persist-credentials: false
+          sparse-checkout: |
+            src
+            package.json
+      - name: Check out PixelForge static GLB importer
+        uses: actions/checkout@v4
+        with:
+          repository: MichaelWave369/parallax-pixelforge
+          ref: ac51ee9e52e16f37d03f7f70e290ffd38fb8640b
+          path: .external/pixelforge
+          persist-credentials: false
+          sparse-checkout: |
+            vr-studio/glb-mesh.js
+            package.json
       - name: Set up Node 22
         uses: actions/setup-node@v4
         with:
@@ -31,6 +51,7 @@ jobs:
       - name: Run browser acceptance gauntlet
         env:
           BIOPHI_BASE_URL: http://127.0.0.1:4173/
+          BIOPHI_TEST_TARGETS: '1'
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 --directory dist &
           SITE_PID=$!

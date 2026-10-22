@@ -140,6 +140,82 @@ try {
     assert.ok(bytes.length>20);
   });
 
+  await step('Native Framefield Studio export contains editable 24fps animation',async()=>{
+    assert.match(await page.locator('#bridge-open-framefield').getAttribute('href'),/FramefieldStudio\/$/);
+    const promise=page.waitForEvent('download');
+    await page.locator('#bridge-export-framefield').click();
+    const file=await promise;
+    assert.match(file.suggestedFilename(),/Framefield.*\.json$/);
+    const data=JSON.parse(await readFile(await file.path(),'utf8'));
+    assert.equal(data.version,1);
+    assert.equal(data.fps,24);
+    assert.equal(data.duration,240);
+    assert.equal(data.objects.length,2);
+    assert.ok(data.objects[0].geometry.vertices.length>4);
+    assert.equal(data.objects[0].keyframes.length,241);
+    if(process.env.BIOPHI_TEST_TARGETS==='1'){
+      const {validateProject}=await import('../.external/framefield/src/scene.js');
+      const imported=validateProject(data);
+      assert.equal(imported.objects.length,2);
+      assert.equal(imported.objects[0].keyframes.length,241);
+      assert.ok(imported.objects[0].geometry.faces.length>100);
+      console.log('PASS Actual Framefield Studio native validateProject importer');
+    }
+  });
+
+  await step('PixelForge-specific GLB export is a valid static glTF binary',async()=>{
+    assert.match(await page.locator('#bridge-open-pixelforge').getAttribute('href'),/parallax-pixelforge\/vr-studio\/$/);
+    const promise=page.waitForEvent('download');
+    await page.locator('#bridge-export-pixelforge').click();
+    const file=await promise;
+    const bytes=await readFile(await file.path());
+    assert.equal(bytes.subarray(0,4).toString(),'glTF');
+    assert.equal(bytes.readUInt32LE(4),2);
+    if(process.env.BIOPHI_TEST_TARGETS==='1'){
+      const {decodeGlbMesh}=await import('../.external/pixelforge/vr-studio/glb-mesh.js');
+      const binary=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+      const result=decodeGlbMesh(binary);
+      assert.ok(result.meshCount>=1);
+      assert.equal(result.status,'STATIC_GEOMETRY_PREVIEW_ONLY');
+      console.log('PASS Actual PixelForge VR Studio static GLB decoder');
+    }
+  });
+
+  await step('Bridge ZIP contains manifest, scene, GLB, source and SHA-256 receipts',async()=>{
+    const promise=page.waitForEvent('download');
+    await page.locator('#bridge-export-pack').click();
+    const file=await promise;
+    assert.match(file.suggestedFilename(),/Creative-Bridge.*\.zip$/);
+    const bytes=await readFile(await file.path());
+    assert.equal(bytes.readUInt32LE(0),0x04034b50);
+    const entries=new Map();let offset=0;
+    while(offset+30<=bytes.length && bytes.readUInt32LE(offset)===0x04034b50){
+      const size=bytes.readUInt32LE(offset+18);
+      const nameBytes=bytes.readUInt16LE(offset+26);
+      const extra=bytes.readUInt16LE(offset+28);
+      const name=bytes.subarray(offset+30,offset+30+nameBytes).toString('utf8');
+      const start=offset+30+nameBytes+extra;
+      entries.set(name,bytes.subarray(start,start+size));
+      offset=start+size;
+    }
+    assert.deepEqual([...entries.keys()],[
+      'manifest.json','biophi.assembly.json','framefield.scene.json',
+      'motion-handoff.json','pixelforge.model.glb','README.txt'
+    ]);
+    const manifest=JSON.parse(entries.get('manifest.json').toString('utf8'));
+    assert.equal(manifest.provenance,'SIMULATED');
+    assert.equal(manifest.noSafetyCertification,true);
+    for(const receipt of manifest.files){
+      const {createHash}=await import('node:crypto');
+      const data=entries.get(receipt.name);
+      assert.equal(data.length,receipt.bytes);
+      assert.equal(createHash('sha256').update(data).digest('hex'),receipt.sha256);
+    }
+    assert.equal(entries.get('pixelforge.model.glb').subarray(0,4).toString(),'glTF');
+    assert.equal(JSON.parse(entries.get('framefield.scene.json').toString()).fps,24);
+    assert.equal(JSON.parse(entries.get('biophi.assembly.json').toString()).format,'BioPhi369-Assembly');
+  });
+
   await step('Narrow viewport has no page-level horizontal overflow',async()=>{
     await page.setViewportSize({width:390,height:844});
     await page.waitForTimeout(100);

@@ -2,6 +2,7 @@ import { regions, byId, modes } from './brainData.js';
 import { createCFDUI } from './cfdUI.js';
 import { createAssemblyUI } from './assemblyUI.js';
 import { createDigitalTwinUI } from './digitalTwinUI.js';
+import { createCreativeBridgeUI } from './creativeBridgeUI.js';
 
 const $ = (selector) => document.querySelector(selector);
 const regionList = $('#region-list');
@@ -17,6 +18,7 @@ let atlas = null;
 let cfdUI = null;
 let assemblyUI = null;
 let twinUI = null;
+let bridgeUI = null;
 
 function setText(selector, value) {
   const target = $(selector);
@@ -143,6 +145,13 @@ assemblyUI = createAssemblyUI({
   onSelect: (id) => atlas?.setAssemblySelection(id),
   onExplode: (value) => atlas?.setExplode(value),
   onExportGLB: async () => {
+    if (!atlas) throw Error('3D scene has not initialized.');
+    return atlas.exportAssemblyGLB();
+  }
+});
+bridgeUI = createCreativeBridgeUI({
+  getModel: () => assemblyUI.getModel(),
+  onExportGLB: () => {
     if (!atlas) throw Error('3D scene has not initialized.');
     return atlas.exportAssemblyGLB();
   }

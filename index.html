@@ -26,7 +26,7 @@
         <span class="brand-mark" aria-hidden="true">Φ</span>
         <span><strong>BIOPHI<span class="brand-numeric">369</span></strong><small>THE BIOLOGICAL COMPUTER</small></span>
       </a>
-      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 05</span></span>
+      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 07</span></span>
     </header>
 
     <main>
@@ -146,7 +146,7 @@
           </section>
           <section id="assembly-panel" class="assembly-panel" aria-labelledby="assembly-heading" hidden>
             <div class="assembly-head">
-              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.5</div>
+              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.7</div>
                 <h2 id="assembly-heading">Imagination → engineering</h2>
                 <p>Make a 3D assembly, inspect components, animate independent rotations, and save editable designs. <strong>Conceptual design only.</strong> Reality Check adds approximate spacing screens, not a contact, stress, or collision solver.</p></div>
               <span class="cfd-badge">EXPERIMENTAL CAD</span>
@@ -294,6 +294,43 @@
                 <ol id="twin-receipts" class="twin-receipts"></ol>
               </div>
             </section>
+            <section id="bridge-panel" class="bridge-panel" aria-labelledby="bridge-heading">
+              <div class="bridge-head">
+                <div><div class="label">09 / CREATIVE ENGINEERING BRIDGE</div>
+                  <h3 id="bridge-heading">One design. Three creative worlds. <small>v0.7</small></h3></div>
+                <span class="twin-status-tag">LOCAL FILE HANDOFF</span>
+              </div>
+              <p>Export your BioPhi369 conceptual assembly as native Framefield Studio keyframes, PixelForge VR Studio static geometry, or a single integrity-checked ZIP. Nothing uploads automatically or changes another site's project.</p>
+              <label class="bridge-mode-label" for="bridge-motion-mode">Framefield animation behavior</label>
+              <select id="bridge-motion-mode">
+                <option value="coupled">Eligible gear-ratio preview (default)</option>
+                <option value="independent">Independent RPMs</option>
+              </select>
+              <div class="bridge-destinations">
+                <article class="bridge-destination">
+                  <div class="label">FRAMEFIELD STUDIO</div>
+                  <h4>Animated scene JSON</h4>
+                  <p>Real native Framefield v1 project: 10 seconds at 24 FPS, named editable shapes and keyframes. Gears are approximated solid toothed disks, with no through-hole. Other geometry may also differ.</p>
+                  <button id="bridge-export-framefield" type="button" class="action">Export Framefield JSON</button>
+                  <a id="bridge-open-framefield" href="https://michaelwave369.github.io/FramefieldStudio/" target="_blank" rel="noopener noreferrer">Open Framefield Studio ↗</a>
+                </article>
+                <article class="bridge-destination">
+                  <div class="label">PIXELFORGE VR STUDIO</div>
+                  <h4>Static 3D geometry</h4>
+                  <p>Rest-pose glTF 2.0 binary mesh for PixelForge's existing local GLB importer. Select an appropriate local asset ID in PixelForge and import the file. Animation, joints and license permissions are not transferred.</p>
+                  <button id="bridge-export-pixelforge" type="button" class="action">Export PixelForge GLB</button>
+                  <a id="bridge-open-pixelforge" href="https://michaelwave369.github.io/parallax-pixelforge/vr-studio/" target="_blank" rel="noopener noreferrer">Open PixelForge VR Studio ↗</a>
+                </article>
+                <article class="bridge-destination bridge-pack-card">
+                  <div class="label">BIOPHI369 / HANDOFF PACKAGE</div>
+                  <h4>Complete creative bridge ZIP</h4>
+                  <p>Includes the original editable BioPhi JSON, native Framefield project, static PixelForge GLB, simulated motion settings, SHA-256 manifest and plain-language instructions. Each target import remains operator-controlled.</p>
+                  <button id="bridge-export-pack" type="button" class="action">Export Complete Bridge Pack .ZIP</button>
+                </article>
+              </div>
+              <p id="bridge-status" class="bridge-status" role="status" aria-live="polite">Ready to export a local creative bridge. Geometry and motion are conceptual and unverified.</p>
+              <p class="bridge-boundary"><strong>Compatibility &amp; evidence:</strong> Framefield Studio uses its validated native JSON scene schema; PixelForge supports selected static local GLBs and may reject unsupported geometry. This is not a live API connection, verified manufacturing CAD, or certified digital twin.</p>
+            </section>
             <p class="assembly-status" id="assembly-status" role="status" aria-live="polite">Two example gears are ready. Add a part or select a shape to edit.</p>
             <p class="assembly-minor"><strong>Integrity boundary:</strong> Exported GLB is an editable mesh scene suitable for tools supporting glTF 2.0, including Blender. No tolerance, tooth contact, structural or safety claim is made. Third-party app support requires independent validation.</p>
           </section>
@@ -336,7 +373,7 @@
           <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
         </article>
         <article class="note-card">
-          <div class="label">FIELD NOTES / 005</div>
+          <div class="label">FIELD NOTES / 007</div>
           <h2>From visualization to design.</h2>
           <p>Our CFD and assembly tools can now produce reproducible visual motion previews and provenance-tagged Reality Ledger receipts. Geometric screening remains experimental, and physical designs need independent engineering verification.</p>
         </article>
