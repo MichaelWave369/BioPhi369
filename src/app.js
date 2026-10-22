@@ -1,6 +1,7 @@
 import { regions, byId, modes } from './brainData.js';
 import { createCFDUI } from './cfdUI.js';
 import { createAssemblyUI } from './assemblyUI.js';
+import { createDigitalTwinUI } from './digitalTwinUI.js';
 
 const $ = (selector) => document.querySelector(selector);
 const regionList = $('#region-list');
@@ -15,6 +16,7 @@ const state = { selected: 'cortex', mode: 'anatomy', explode: 0, hemisphere: 'bo
 let atlas = null;
 let cfdUI = null;
 let assemblyUI = null;
+let twinUI = null;
 
 function setText(selector, value) {
   const target = $(selector);
@@ -58,6 +60,7 @@ function showMode(mode) {
   atlas?.setMode(mode);
   cfdUI?.setActive(mode === 'cfd');
   assemblyUI?.setActive(mode === 'builder');
+  twinUI?.setActive(mode === 'builder');
   $('.workspace').classList.toggle('builder-active', mode === 'builder');
   $('.regions-panel').hidden = mode === 'builder';
   $('.detail-panel').hidden = mode === 'builder';
@@ -129,6 +132,7 @@ buildRegions();
 assemblyUI = createAssemblyUI({
   onChange: (model) => {
     atlas?.setAssembly(model);
+    twinUI?.setModel(model);
     if (state.mode === 'builder') {
       state.explode = model.explode;
       explodeSlider.value = String(model.explode);
@@ -141,6 +145,14 @@ assemblyUI = createAssemblyUI({
   onExportGLB: async () => {
     if (!atlas) throw Error('3D scene has not initialized.');
     return atlas.exportAssemblyGLB();
+  }
+});
+twinUI = createDigitalTwinUI({
+  getModel: () => assemblyUI.getModel(),
+  onTimeline: (options) => atlas?.setDigitalTwinTimeline(options),
+  onMeshScan: () => {
+    if (!atlas) throw Error('3D renderer has not started.');
+    return atlas.scanAssemblyMeshes();
   }
 });
 cfdUI = createCFDUI({
@@ -177,6 +189,7 @@ async function boot() {
     atlas.setHemisphere(state.hemisphere);
     atlas.setCFDSettings(cfdUI.getSettings());
     atlas.setAssembly(assemblyUI.getModel());
+    twinUI.setModel(assemblyUI.getModel());
     fallback.classList.add('hidden');
     motionButton.disabled = false;
     resetButton.disabled = false;
@@ -188,4 +201,4 @@ async function boot() {
   }
 }
 boot();
-window.addEventListener('pagehide', () => { cfdUI?.stop(); assemblyUI?.stop(); atlas?.dispose(); }, { once: true });
+window.addEventListener('pagehide', () => { cfdUI?.stop(); assemblyUI?.stop(); twinUI?.stop(); atlas?.dispose(); }, { once: true });
