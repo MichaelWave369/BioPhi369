@@ -1,5 +1,18 @@
 # BioPhi369 · The Biological Computer
 
+## v0.6 · Browser Acceptance Gauntlet
+
+This version adds **real Chromium acceptance checks** for the deployed WebGL interaction surfaces, rather than relying on Node tests and a successful static build alone.
+
+- `scripts/browser-acceptance.mjs` starts a real headless Chromium browser via Playwright against a local static build and watches for uncaught browser exceptions.
+- Verifies real Three.js WebGL initialization and all four modes, 3D engineering part selection, rejected-by-default gear constraints and snapping to nominal pitch after editing part scale.
+- Exercises timeline scrubbing to 5s and 30s, reset, Play/Pause, Reality Check mesh surface inspection, provenance-tagged receipt recording/export/clear, portable assembly JSON export, **actual GLB download magic/version**, malicious JSON import rejection, responsive viewport width, and navigation back to Anatomy/CFD.
+- `.github/workflows/browser-acceptance.yml` runs separately on pull requests / manual dispatch, installs `playwright@1.56.1` and Chromium into the ephemeral GitHub Actions runner (zero new production dependencies), builds static content and exercises the UI on localhost. A screenshot is uploaded if it fails.
+- Prior v0.5 live-browser acceptance found successful gear snapping, a 0→1 eligible link update, RPM preview, mesh intersection response and simulated ledger receipts. It did **not** complete GLB/timeline checks. The new automated gauntlet is intended to close that verification gap.
+- Browser CDN/network availability and WebGL support remain runtime prerequisites. A passing automated run does not establish a mechanically safe design, and the on-screen simulation remains **SIMULATED / UNVERIFIED**.
+
+**Local test:** Run `npm run build`, serve `dist` at http://127.0.0.1:4173/, install Playwright and Chromium in a temporary environment, then run `npm run test:browser`. Node unit tests (`npm test`) and `npm run build` still need no third-party npm dependencies.
+
 ## v0.5 · Digital Twin Laboratory (bounded experimental motion)
 
 Fifth generation builds on Reality Check rather than replacing or weakening it:
