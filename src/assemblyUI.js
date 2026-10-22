@@ -41,6 +41,7 @@ export function createAssemblyUI({ onChange, onSelect, onExplode, onExportGLB })
     playing = false;
     activeFrame = -1;
     renderFrames();
+    renderReality();
   }
   function requireSelected() {
     return doc.parts.find(part => part.id === doc.selected) ?? null;
