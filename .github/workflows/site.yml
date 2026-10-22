@@ -42,6 +42,8 @@ jobs:
           node --check src/creativeBridge.js
           node --check src/creativeBridgePack.js
           node --check src/creativeBridgeUI.js
+          node --check src/roundTrip.js
+          node --check src/roundTripUI.js
       - name: Run evidence-boundary tests
         run: npm test
       - name: Export static site
