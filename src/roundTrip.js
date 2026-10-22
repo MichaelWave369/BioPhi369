@@ -12,6 +12,9 @@ const finite = (n,min,max)=>typeof n==='number'&&Number.isFinite(n)&&n>=min&&n<=
 const close = (a,b)=>Math.abs(a-b)<0.0003;
 const equal = (a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const round = n=>Math.round(n*1e6)/1e6;
+// UI-only selection and exploded-view position may change during inspection.
+// Real assembly/content mutations (including links, frames and motors) invalidate the review.
+const structuralSnapshot = doc => JSON.stringify({...doc,selected:null,explode:0});
 
 // Native Framefield ids are deliberately *regenerated on import*, so the
 // marker in its editable name field is the only supported mapping authority.
@@ -151,7 +154,7 @@ export function inspectRoundTrip(assembly,source) {
   }
   return {
     source:'Framefield Studio v1',provenance:'INFERRED',status:'UNVERIFIED',
-    sourceSnapshot:JSON.stringify(doc),
+    sourceSnapshot:structuralSnapshot(doc),
     rows,problems,
     fatal:problems.some(message=>message.startsWith('Duplicate component identity')),
     actionable:rows.filter(r=>!r.blocked&&r.changes.length>0).length,
@@ -160,7 +163,7 @@ export function inspectRoundTrip(assembly,source) {
 }
 export function applyReviewedRoundTrip(assembly,review,ids){
   const current=validateAssembly(assembly);
-  if(!review||review.fatal||JSON.stringify(current)!==review.sourceSnapshot)
+  if(!review||review.fatal||structuralSnapshot(current)!==review.sourceSnapshot)
     throw Error('Assembly changed or review is unsafe. Load and inspect the return again.');
   const chosen=new Set(ids);
   if(!chosen.size)throw Error('Choose at least one reviewed component.');
