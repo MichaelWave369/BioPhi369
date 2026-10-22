@@ -241,6 +241,8 @@ export function createAtlas(viewport, onSelect, onSelectAssembly = () => {}) {
   function setMotion(value) { motion = Boolean(value); }
   function setAssembly(model) { assembly.build(model); }
   function setAssemblySelection(id) { assembly.setSelected(id); }
+  function setDigitalTwinTimeline(options) { assembly.setTimeline(options); }
+  function scanAssemblyMeshes() { return assembly.scanRestPose(); }
   function exportAssemblyGLB() { return assembly.exportGLB(); }
 
   function setHemisphere(value) {
@@ -340,5 +342,5 @@ export function createAtlas(viewport, onSelect, onSelectAssembly = () => {}) {
     canvas.remove();
   }
 
-  return { setSelected, setMode, setExplode, setMotion, setHemisphere, setCFDSettings, setAssembly, setAssemblySelection, exportAssemblyGLB, reset, dispose, get motion() { return motion; } };
+  return { setSelected, setMode, setExplode, setMotion, setHemisphere, setCFDSettings, setAssembly, setAssemblySelection, setDigitalTwinTimeline, scanAssemblyMeshes, exportAssemblyGLB, reset, dispose, get motion() { return motion; } };
 }

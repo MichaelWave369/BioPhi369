@@ -1,5 +1,25 @@
 # BioPhi369 · The Biological Computer
 
+## v0.5 · Digital Twin Laboratory (bounded experimental motion)
+
+Fifth generation builds on Reality Check rather than replacing or weakening it:
+
+- **Deterministic 30-second timeline**: play, pause, reset, scrub and choose playback speed (0.25–2×). Visual poses are derived from rest geometry and time; playback does not rewrite design documents or GLB rest geometry.
+- **Coupled-look preview** for annotated gear-to-gear connections, only when rough parallel-Y axis, common Y plane, nominal visual center separation and compatible tooth count / primitive size conditions all pass. Signed external-tooth ratio propagation through a graph is deterministic. Contradictory odd cycles **fail closed to independent RPMs** and show a warning. Other parts stay at zero in coupled preview, never magically become driven.
+- **Independent RPM mode** retains the v0.3 concept behavior when the user wants independent rotations.
+- **Explicit mesh-surface screening** on the assembled *rest pose* using world-transformed triangles from the real procedurally generated THREE meshes. Includes box broad-phase, triangle-edge crossing narrow-phase, strict geometry/comparison limits and an INCONCLUSIVE outcome when a pair cannot be verified. **Does not detect all collisions**: parallel/coplanar, full containment and moving swept intersections may be missed; no guarantee of safety.
+- **Reality Ledger** generates user-triggered `SIMULATED / UNVERIFIED` model receipts with selected gear driver, graph eligibility, cautions and mesh-screen counts. Kept in separate browser-local storage, capped to 60 entries; JSON download and local deletion. Never logs a "physical test pass" on a model-based prediction.
+- Added unit tests for gear graph consistency, missing/ineligible links, time bounds, sequential rotations, odd cycles and receipts. The interactive WebGL scene and browser download must still be smoke tested in desktop/mobile browsers.
+
+**Evidence rule:** These are reproducible visual and approximate geometric tools, not validated digital-twin physics. No torque, collision-free certification, mesh-to-mesh complete intersection guarantee, deformation, loads, friction, tooth engagement or manufacturing tolerances. The visual shapes use arbitrary scene units. No personal information or neural data is collected.
+
+### v0.5 modules
+
+- `src/digitalTwin.js`: pure deterministic motion and receipt schema.
+- `src/digitalTwinUI.js`: timeline and local Reality Ledger interaction.
+- `src/meshInspection.js`: deliberately bounded, incomplete triangle-surface intersection screening.
+- `tests/digitalTwin.test.mjs`: motion and provenance negative controls.
+
 ## v0.4 · Reality Check Lab
 
 New **heuristic inspection** inside Engineering Bridge. Preserves all earlier modes and design-document compatibility.

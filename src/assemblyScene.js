@@ -1,4 +1,6 @@
 import { validateAssembly } from './assemblyData.js';
+import { sampleMotion } from './digitalTwin.js';
+import { scanMeshSurfaces } from './meshInspection.js';
 
 // Visual kinematics, not validated mechanics. No collision, torque, materials,
 // load, inertia, tooth-contact geometry or engineering safety predictions.
@@ -7,6 +9,7 @@ export function createAssemblyScene(THREE, scene) {
   root.visible = false;
   scene.add(root);
   let model = null, selected = null, explode = 0, elapsed = 0;
+  let timeline = null;
   const objects = new Map(), selectable = [];
   let linksObject = null;
 
@@ -96,7 +99,7 @@ export function createAssemblyScene(THREE, scene) {
       entry.holder.position.copy(base);
       entry.holder.rotation.set(
         THREE.MathUtils.degToRad(part.rotation.x),
-        THREE.MathUtils.degToRad(part.rotation.y)+elapsed*part.rpm*Math.PI*2/60,
+        THREE.MathUtils.degToRad(part.rotation.y)+(timeline?.angles?.[part.id]??elapsed*part.rpm*Math.PI*2/60),
         THREE.MathUtils.degToRad(part.rotation.z)
       );
       entry.holder.scale.setScalar(part.size);
@@ -125,8 +128,27 @@ export function createAssemblyScene(THREE, scene) {
     explode=Number.isFinite(Number(value))?Math.max(0,Math.min(1,Number(value))):0;
     layout();
   }
+  function setTimeline(options) {
+    if(!model) return;
+    timeline = options ? sampleMotion(model, options) : null;
+    layout();
+  }
+  function scanRestPose() {
+    if(!model)return {candidatePairs:0,crossings:[],inconclusive:[],disclaimer:'No assembly present.'};
+    const restoreTimeline=timeline, restoreElapsed=elapsed, restoreExplode=explode;
+    try {
+      // Explicitly inspect un-exploded, non-spinning rest-pose geometry.
+      timeline=null; elapsed=0; explode=0; layout();
+      root.updateMatrixWorld(true);
+      const entries=Array.from(objects.entries(),([id,{mesh}])=>({id,mesh}));
+      return scanMeshSurfaces(THREE,entries);
+    } finally {
+      timeline=restoreTimeline; elapsed=restoreElapsed; explode=restoreExplode;
+      layout();
+    }
+  }
   function tick(delta,motion) {
-    if (!model||!root.visible||!motion) return;
+    if (!model||!root.visible||!motion || timeline)return;
     elapsed += Math.min(.05,Math.max(0,delta));
     // This is independent spin per part, not an engaged-gear solver.
     layout();
@@ -165,5 +187,5 @@ export function createAssemblyScene(THREE, scene) {
   }
   function dispose() { clear(); root.removeFromParent(); }
 
-  return { root, build, setSelected, setExplode, tick, pick, exportGLB, dispose };
+  return { root, build, setSelected, setExplode, setTimeline, scanRestPose, tick, pick, exportGLB, dispose };
 }

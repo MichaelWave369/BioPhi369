@@ -36,6 +36,9 @@ jobs:
           node --check src/assemblyScene.js
           node --check src/assemblyUI.js
           node --check src/realityCheck.js
+          node --check src/digitalTwin.js
+          node --check src/digitalTwinUI.js
+          node --check src/meshInspection.js
       - name: Run evidence-boundary tests
         run: npm test
       - name: Export static site
