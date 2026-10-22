@@ -212,3 +212,11 @@ a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-vis
 .twin-receipts li p{margin:5px 0 0;color:#9bb6bf}
 @media(max-width:830px){.twin-layout{grid-template-columns:1fr}.twin-panel{padding:16px}}
 @media(max-width:500px){.twin-config,.twin-inspection,.twin-ledger{padding:12px}.twin-header .twin-status-tag{font-size:8px}.twin-panel{padding:12px}}
+
+/* v0.6 mobile overflow fix: absolute ambient glows used to extend outside the
+   viewport and increased documentElement.scrollWidth to ~740px on a 390px phone.
+   Preserve the glows but constrain their boxes to the mobile viewport. */
+@media(max-width:760px){
+  .ambient-one{left:0;width:100%}
+  .ambient-two{right:0;width:100%}
+}
