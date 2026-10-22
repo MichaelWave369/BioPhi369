@@ -58,6 +58,12 @@ function ringMesh() {
   return {vertices,faces};
 }
 
+// Framefield regenerates object ids on import; tagged names survive its
+// validated Open JSON → Save JSON workflow as long as the user keeps the prefix.
+export function makeTaggedFramefieldName(part) {
+  const label='[BP369:'+part.id+']';
+  return label+' '+String(part.name||part.id).slice(0,65-label.length-1);
+}
 export function framefieldPart(part,speed) {
   const kind={gear:'cylinder',ring:'torus',shaft:'cylinder',block:'box',bubble:'sphere'}[part.type];
   const custom = part.type==='gear'?gearMesh(part.teeth):part.type==='ring'?ringMesh():null;
@@ -78,7 +84,7 @@ export function framefieldPart(part,speed) {
     const rotation=[part.rotation.x,clean(part.rotation.y+speed*6*t),part.rotation.z];
     keyframes.push({frame,position:[...position],rotation,scale:[...scale]});
   }
-  return {id:part.id,type:kind,name:part.name || part.id,color:colors[part.type],
+  return {id:part.id,type:kind,name:makeTaggedFramefieldName(part),color:colors[part.type],
     visible:true, ...(custom?{geometry:custom}:{}),keyframes};
 }
 
