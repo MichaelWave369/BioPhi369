@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090e19">
+  <meta name="description" content="BioPhi369: a 3D educational atlas of brain networks, computing analogies and mental rotation.">
+  <title>BioPhi369 | The Biological Computer</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="BioPhi369 home">
+        <span class="brand-mark" aria-hidden="true">Φ</span>
+        <span><strong>BIOPHI<span class="brand-numeric">369</span></strong><small>THE BIOLOGICAL COMPUTER</small></span>
+      </a>
+      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 01</span></span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="eyebrow">NEURAL ARCHITECTURE <span>·</span> HUMAN IMAGINATION <span>·</span> OPEN EXPLORATION</div>
+        <h1 id="page-title">What if you could <em>open up</em> an idea?</h1>
+        <p>Spin an illustrative brain, separate its systems, and explore how spatial imagination connects to the networks behind perception, memory and planning.</p>
+        <p class="hero-warning"><strong>Scientific boundary:</strong> The model is deliberately schematic. The brain is not literally a PC; its two hemispheres are not a CPU and GPU, and the pineal gland is not RAM.</p>
+      </section>
+
+      <nav class="mode-tabs" aria-label="Explore modes">
+        <button class="mode-tab active" type="button" data-mode="anatomy" aria-pressed="true"><span class="mode-glyph">01</span> Anatomy atlas</button>
+        <button class="mode-tab" type="button" data-mode="analogy" aria-pressed="false"><span class="mode-glyph">02</span> Computer analogy</button>
+        <button class="mode-tab" type="button" data-mode="cfd" aria-pressed="false"><span class="mode-glyph">03</span> CFD workshop</button>
+      </nav>
+
+      <div class="workspace">
+        <aside class="panel regions-panel" aria-labelledby="region-heading">
+          <div class="panel-topline"><span class="label">SYSTEM INDEX</span><span>10 COMPONENTS</span></div>
+          <h2 id="region-heading">Explore networks</h2>
+          <div id="region-list" class="region-list" role="group" aria-label="Brain structures"></div>
+          <div class="index-footer"><span class="tiny-node"></span> Select any system to inspect its function.</div>
+        </aside>
+
+        <section class="stage-column" aria-label="Interactive three-dimensional brain model">
+          <div class="stage" id="stage">
+            <div class="stage-top">
+              <span class="stage-label"><span class="scan-line-icon">⊕</span> <span id="stage-mode">ANATOMY / SCHEMATIC</span></span>
+              <span class="live-badge">● MODEL SPACE</span>
+            </div>
+            <div id="viewport" class="viewport" role="img" aria-label="Rotatable interactive schematic of brain structures"></div>
+            <div id="stage-fallback" class="stage-fallback">Initializing 3D atlas… If WebGL or CDN access is blocked, explore the region list instead.</div>
+            <div class="stage-footer">
+              <span class="stage-hint">DRAG TO ROTATE <span>·</span> SCROLL / PINCH TO ZOOM <span>·</span> TAP A NODE</span>
+              <span class="coordinate">X / Y / Z</span>
+            </div>
+          </div>
+
+          <div class="control-card">
+            <div class="control-heading"><span>VIEW CONTROLS</span><span class="control-small" id="explode-value">00% EXPLODED</span></div>
+            <label for="explode">Separate structures</label>
+            <input id="explode" type="range" min="0" max="100" value="0" step="1">
+            <div class="range-ends"><span>ASSEMBLED</span><span>EXPLODED VIEW</span></div>
+            <div class="control-buttons">
+              <button id="motion" class="action secondary" type="button" aria-pressed="true">Pause motion</button>
+              <button id="reset" class="action" type="button">Reset view ↺</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel detail-panel" aria-labelledby="detail-name">
+          <div class="panel-topline"><span class="label">INSPECTION PANEL</span><span id="detail-count">01 / 10</span></div>
+          <div class="detail-icon" id="detail-icon" aria-hidden="true">◈</div>
+          <div class="detail-category" id="detail-category">INTEGRATION</div>
+          <h2 id="detail-name">Cerebral hemispheres</h2>
+          <p class="detail-short" id="detail-short">Distributed processing</p>
+          <div class="divider"></div>
+          <section class="detail-section">
+            <h3><span class="bullet bullet-fact"></span> BIOLOGICAL FUNCTION</h3>
+            <p id="detail-description"></p>
+          </section>
+          <section class="detail-section metaphor-section">
+            <h3><span class="bullet bullet-metaphor"></span> COMPUTER METAPHOR</h3>
+            <span class="metaphor-tag" id="detail-computer"></span>
+            <p id="detail-analogy"></p>
+          </section>
+          <section class="detail-section boundary-section">
+            <h3><span class="bullet bullet-boundary"></span> WHERE THE ANALOGY BREAKS</h3>
+            <p id="detail-boundary"></p>
+          </section>
+          <div class="detail-bottom">SOURCE STATUS <strong>EDUCATIONAL SUMMARY</strong><br>MODEL STATUS <strong>ARTISTIC / NOT TO SCALE</strong></div>
+        </aside>
+      </div>
+
+      <section class="explainer" aria-label="Mode description">
+        <span class="explainer-index">Φ / <span id="mode-number">01</span></span>
+        <div><h2 id="mode-heading">Explore the connected brain</h2><p id="mode-description"></p></div>
+        <span class="explainer-line" aria-hidden="true">↗</span>
+      </section>
+
+      <section class="bottom-grid" aria-label="Scientific context">
+        <article class="note-card">
+          <div class="label">THE CENTRAL IDEA</div>
+          <h2>A network, not a motherboard.</h2>
+          <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
+        </article>
+        <article class="note-card">
+          <div class="label">FIELD NOTES / 001</div>
+          <h2>From visualization to design.</h2>
+          <p>CFD mode represents a design exercise: picture an object, separate its parts, rotate them, and test the relationships. An imagined mechanism still needs engineering checks.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer"><span>© 2026 BIOPHI369 · AN ENTER THE FIELD EXPERIMENT</span><span>EDUCATION, NOT DIAGNOSIS <span class="footer-symbol">Φ</span></span></footer>
+  </div>
+</body>
+</html>
