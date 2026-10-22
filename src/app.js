@@ -1,4 +1,5 @@
 import { regions, byId, modes } from './brainData.js';
+import { createCFDUI } from './cfdUI.js';
 
 const $ = (selector) => document.querySelector(selector);
 const regionList = $('#region-list');
@@ -9,8 +10,9 @@ const motionButton = $('#motion');
 const resetButton = $('#reset');
 const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-const state = { selected: 'cortex', mode: 'anatomy', explode: 0, motion: !motionPreference.matches };
+const state = { selected: 'cortex', mode: 'anatomy', explode: 0, hemisphere: 'both', motion: !motionPreference.matches };
 let atlas = null;
+let cfdUI = null;
 
 function setText(selector, value) {
   const target = $(selector);
@@ -52,6 +54,13 @@ function showMode(mode) {
   setText('#mode-description', modes[mode].description);
   setText('#stage-mode', mode === 'cfd' ? 'CFD / MENTAL ROTATION' : mode === 'analogy' ? 'ANALOGY / METAPHOR' : 'ANATOMY / SCHEMATIC');
   atlas?.setMode(mode);
+  cfdUI?.setActive(mode === 'cfd');
+  if (mode === 'cfd' && cfdUI) {
+    const saved = cfdUI.getSettings();
+    setExplode(saved.explode);
+    setHemisphere(saved.hemisphere);
+    atlas?.setCFDSettings(cfdUI.getSettings());
+  }
 }
 
 function setExplode(value) {
@@ -60,6 +69,18 @@ function setExplode(value) {
   explodeSlider.value = String(state.explode);
   setText('#explode-value', String(state.explode).padStart(2, '0') + '% EXPLODED');
   atlas?.setExplode(state.explode / 100);
+  if (state.mode === 'cfd') cfdUI?.sync({ explode: state.explode });
+}
+
+function setHemisphere(value) {
+  state.hemisphere = ['both', 'left', 'right'].includes(value) ? value : 'both';
+  document.querySelectorAll('[data-hemisphere]').forEach((button) => {
+    const selected = button.dataset.hemisphere === state.hemisphere;
+    button.classList.toggle('active', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
+  atlas?.setHemisphere(state.hemisphere);
+  if (state.mode === 'cfd') cfdUI?.sync({ hemisphere: state.hemisphere });
 }
 
 function setMotion(value) {
@@ -94,6 +115,14 @@ function buildRegions() {
 }
 
 buildRegions();
+cfdUI = createCFDUI({
+  onChange: (settings) => {
+    setExplode(settings.explode);
+    setHemisphere(settings.hemisphere);
+    atlas?.setCFDSettings(settings);
+  },
+  onMode: () => showMode('cfd')
+});
 showRegion(state.selected);
 showMode(state.mode);
 setExplode(0);
@@ -102,6 +131,9 @@ motionButton.disabled = true;
 resetButton.disabled = true;
 
 modelModes.forEach((button) => button.addEventListener('click', () => showMode(button.dataset.mode)));
+document.querySelectorAll('[data-hemisphere]').forEach((button) => {
+  button.addEventListener('click', () => setHemisphere(button.dataset.hemisphere));
+});
 explodeSlider.addEventListener('input', (event) => setExplode(event.target.value));
 motionButton.addEventListener('click', () => setMotion(!state.motion));
 resetButton.addEventListener('click', () => { setExplode(0); atlas?.reset(); });
@@ -114,6 +146,8 @@ async function boot() {
     atlas.setMode(state.mode);
     atlas.setExplode(state.explode / 100);
     atlas.setMotion(state.motion);
+    atlas.setHemisphere(state.hemisphere);
+    atlas.setCFDSettings(cfdUI.getSettings());
     fallback.classList.add('hidden');
     motionButton.disabled = false;
     resetButton.disabled = false;
@@ -125,4 +159,4 @@ async function boot() {
   }
 }
 boot();
-window.addEventListener('pagehide', () => atlas?.dispose(), { once: true });
+window.addEventListener('pagehide', () => { cfdUI?.stop(); atlas?.dispose(); }, { once: true });
