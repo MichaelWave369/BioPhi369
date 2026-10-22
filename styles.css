@@ -179,3 +179,36 @@ a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-vis
 .reality-clear{padding:13px;border:1px solid #45666d;border-radius:6px;color:#b9d3d6;background:#132a32;font-size:12px}
 .reality-detail{font-size:11px!important;color:#a5b8bc!important;line-height:1.7!important}
 @media(max-width:640px){.reality-panel{padding:13px}.reality-head{flex-wrap:wrap}.reality-ratios,.reality-findings{grid-template-columns:1fr}.reality-align{display:block}.reality-align select{width:100%;max-width:none;margin:8px 0}.reality-actions{margin:8px 0}}
+
+/* BioPhi369 v0.5: digital twin is a transparent experiment, not a safety rating */
+.twin-panel{margin-top:20px;border:1px solid #63728f81;background:linear-gradient(135deg,#142636,#101d2f);border-radius:10px;padding:23px}
+.twin-header,.twin-ledger-head{display:flex;align-items:start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.twin-header h3{font-size:clamp(20px,3vw,27px);letter-spacing:-.4px;margin:7px 0}
+.twin-header small{font-size:11px;color:#a7d1c6}
+.twin-status-tag{font-size:9px;letter-spacing:1px;padding:7px;border:1px solid #9a8966;color:#f2d9af;border-radius:5px}
+.twin-panel>p{font-size:12px;color:#b4c7d4;line-height:1.8;margin:5px 0 20px}
+.twin-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:15px}
+.twin-config,.twin-inspection,.twin-ledger{border:1px solid #395869;background:#0b1a2a;border-radius:7px;padding:18px;min-width:0}
+.twin-config>label{font-size:12px;color:#c8e3df;font-weight:650;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 7px}
+.twin-config select{width:100%;min-height:43px;border:1px solid #53777d;background:#101f31;color:#e6f7f2;border-radius:6px;font-size:12px;padding:9px 11px;max-width:none}
+.twin-config input[type=range]{width:100%;accent-color:#85dcc2;min-height:29px}
+.twin-config output{font-variant-numeric:tabular-nums;color:#a3e0cf;font-size:12px}
+.twin-controls{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.twin-controls .action{min-width:92px;flex:1 1 90px}
+.twin-controls .action:disabled{opacity:.42;cursor:not-allowed}
+.twin-small{font-size:11px;color:#93a7bc;line-height:1.6}
+.twin-motion-status,.twin-mesh-results{font-size:12px;line-height:1.7;padding:12px;color:#d1e5df;border:1px solid #4b716b;border-radius:6px;margin:13px 0;background:#183336}
+.twin-mesh-results{border-color:#796f61;background:#262821;color:#e8dac9;overflow-wrap:anywhere}
+.twin-findings{list-style:none;margin:12px 0;padding:0;max-height:275px;overflow:auto;display:grid;gap:7px}
+.twin-findings li{padding:10px 12px;font-size:11px;line-height:1.65;background:#152638;border:1px solid #385668;border-radius:6px;color:#c1d8dc}
+.twin-findings li.caution{background:#322921;border-color:#816e50;color:#eed4b0}
+.twin-ledger{margin-top:15px}
+.twin-ledger-head h4{font-size:15px;margin:6px 0 9px}
+.twin-ledger-head h4 small{display:block;font-size:10px;color:#97b2c0;line-height:1.7;font-weight:400}
+.twin-ledger-head .twin-controls{margin:0}
+.twin-receipts{list-style:none;margin:12px 0 0;padding:0;max-height:245px;overflow-y:auto;display:grid;gap:6px}
+.twin-receipts li{border:1px solid #344f5f;border-radius:5px;padding:9px 12px;background:#0d2130;line-height:1.5;font-size:11px;color:#c9d9dd}
+.twin-receipts li strong{display:block;color:#ebdfb5;font-size:11px}
+.twin-receipts li p{margin:5px 0 0;color:#9bb6bf}
+@media(max-width:830px){.twin-layout{grid-template-columns:1fr}.twin-panel{padding:16px}}
+@media(max-width:500px){.twin-config,.twin-inspection,.twin-ledger{padding:12px}.twin-header .twin-status-tag{font-size:8px}.twin-panel{padding:12px}}
