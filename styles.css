@@ -39,3 +39,49 @@ a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-vis
 @media(max-width:760px){.topbar{height:76px}.status{font-size:9px}.edition{display:none}.hero{padding:40px 0 28px}.hero h1{letter-spacing:-1.3px}.hero>p{font-size:14px}.workspace{display:flex;flex-direction:column}.stage-column{order:1}.regions-panel{order:2}.detail-panel{order:3;display:block}.stage,.viewport{min-height:370px;height:370px}.stage-top,.stage-footer{left:21px;right:21px}.stage-hint{font-size:8px}.region-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.region-button{min-width:0}.region-button strong{font-size:11px}.detail-panel>.divider{margin:22px 0}.detail-icon{margin-top:22px}.bottom-grid{grid-template-columns:1fr}.explainer{align-items:flex-start;padding:19px}.footer{flex-direction:column;align-items:flex-start}.mode-tab{flex:1;justify-content:center;padding:12px 7px;font-size:11px;gap:6px}.mode-glyph{font-size:9px}}
 @media(max-width:470px){.app-shell{padding:0 13px}.status{font-size:0;gap:5px}.status-dot{height:8px;width:8px}.status .edition{display:none}.brand strong{font-size:15px}.brand small{font-size:7px}.hero h1{font-size:36px}.stage,.viewport{height:335px;min-height:335px}.stage-footer{bottom:17px}.coordinate{display:none}.stage-hint{font-size:8px;line-height:1.45}.stage-top{top:20px}.stage-label,.live-badge{font-size:8px}.mode-tab{font-size:10px}.control-card{padding:18px}.detail-panel{padding:20px}.region-button{padding:8px 7px;gap:8px}.region-button small{font-size:9px}.explainer-line{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* BioPhi369 v0.2: compact CFD lab with responsive, accessible keyframes. */
+[hidden]{display:none!important}
+.hemisphere-picker{margin-top:15px;padding-top:13px;border-top:1px solid var(--line)}
+.control-caption{display:block;color:#a9c4cb;font-size:10px;letter-spacing:1.2px;font-weight:750}
+.control-caption small{display:block;color:#8499aa;letter-spacing:0;font-weight:400;margin:4px 0 9px;font-size:11px}
+.segment-buttons{display:flex;gap:7px}
+.segment-button{min-height:40px;flex:1;background:#172536;border:1px solid #344b5c;border-radius:6px;color:#afc7d0;font-size:12px}
+.segment-button.active{background:#214b49;border-color:#58b9a6;color:#e1fff3}
+.cfd-panel{padding:24px;border:1px solid #35696088;background:linear-gradient(145deg,#152a36,#101b2a 80%);border-radius:12px;min-width:0}
+.cfd-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.cfd-panel .label{color:var(--mint)}
+.cfd-heading h2{font-size:23px;letter-spacing:-.6px;margin:8px 0 10px}
+.cfd-badge{font-size:9px;letter-spacing:1px;color:#8bdacb;border:1px solid #478d83;border-radius:5px;padding:7px;white-space:nowrap}
+.cfd-panel p{font-size:12px;color:#afc3d0;line-height:1.65;margin:0 0 16px}
+.cfd-panel strong{color:#dff8ee}
+.preset-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:19px}
+.preset-btn{border:1px solid #3a5967;background:#152637;border-radius:6px;color:#d2e4e7;font-size:11px;padding:9px;min-height:39px}
+.preset-btn:hover{background:#214253;border-color:#4e9e93}
+.cfd-selectors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.cfd-selectors label{display:block;min-width:0;font-size:11px;color:#b6ccd0;font-weight:650}
+.cfd-selectors select{margin-top:7px;width:100%;min-width:0;padding:10px 7px;background:#0c1a29;color:#dcefea;border:1px solid #3b5968;border-radius:6px;font-size:12px;min-height:44px}
+.cfd-sliders{display:grid;grid-template-columns:1fr;gap:4px;margin-bottom:18px}
+.cfd-sliders label{display:flex;justify-content:space-between;gap:12px;color:#c6dbe0;font-size:12px;font-weight:650}
+.cfd-sliders output{color:#8debd8;font-variant-numeric:tabular-nums}
+.cfd-sliders input[type=range]{width:100%;min-height:27px;accent-color:#79d5c6;margin:0 0 6px}
+.recorder{border-top:1px solid #4e778059;padding-top:21px}
+.recorder-heading{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.recorder h3{font-size:16px;margin:0 0 7px;font-weight:650}
+.recorder-heading>span{font-size:10px;color:#8fb7b2;letter-spacing:1px}
+.capture-row{display:flex;gap:7px;align-items:stretch;margin-bottom:10px}
+.capture-row input{flex:1;min-width:0;border:1px solid #3a5968;color:#e9fcf8;background:#0a1928;border-radius:5px;padding:8px 10px;font-size:12px}
+.capture-row .action{flex:0 0 auto}
+.frame-list{list-style:none;margin:10px 0 13px;padding:0;display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
+.frame-row{display:flex;align-items:center;justify-content:space-between;gap:5px;border:1px solid #334754;background:#0c1928;border-radius:5px;padding:5px 7px;color:#dce8ed;min-width:0}
+.frame-row.playing{border-color:#6bd9b9;background:#1b383a}
+.frame-select{border:0;background:transparent;flex:1;min-width:0;color:inherit;text-align:left;padding:5px 2px;cursor:pointer;font-size:12px}
+.frame-select small{font-size:10px;color:#8caab2;display:block;margin-top:2px}
+.frame-delete{flex:none;min-height:36px;min-width:34px;background:transparent;color:#dbac99;border:1px solid #654d50;border-radius:5px;font-size:14px}
+.recorder-buttons{display:flex;gap:7px;margin:8px 0;flex-wrap:wrap}
+.recorder-buttons .action{min-width:105px;flex:1;font-size:11px}
+.recorder-buttons .action:disabled,.capture-row .action:disabled{opacity:.45;cursor:not-allowed}
+.import-button{display:grid;place-items:center;text-align:center;cursor:pointer}
+.cfd-status{padding-top:6px;font-size:11px!important;color:#96bac2!important;margin-bottom:0!important}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:470px){.cfd-panel{padding:16px}.cfd-heading h2{font-size:20px}.cfd-badge{font-size:8px}.cfd-selectors{grid-template-columns:1fr}.recorder-buttons .action{min-width:81px}.capture-row input{font-size:11px}}
