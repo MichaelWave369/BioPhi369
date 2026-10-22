@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { regions, links } from './brainData.js';
 import { createCFDLayer } from './cfdEngine.js';
+import { createAssemblyScene } from './assemblyScene.js';
 import { normalizeCFDSettings } from './cfdState.js';
 
-export function createAtlas(viewport, onSelect) {
+export function createAtlas(viewport, onSelect, onSelectAssembly = () => {}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(41, 1, 0.1, 70);
   camera.position.set(3.5, 2.1, 4.7);
@@ -167,6 +168,7 @@ export function createAtlas(viewport, onSelect) {
     cfdParts.push(pivot);
   }
   workshop.visible = false;
+  const assembly = createAssemblyScene(THREE, scene);
   const cfdLayer = createCFDLayer(THREE, workshop, trackGeometry, trackMaterial);
   let hemisphereView = 'both';
   let cfdSettings = normalizeCFDSettings();
@@ -198,6 +200,7 @@ export function createAtlas(viewport, onSelect) {
     linkGeometry.attributes.position.needsUpdate = true;
     linkGeometry.computeBoundingSphere();
     cfdLayer.setExplode(explode);
+    assembly.setExplode(explode);
     cfdParts.forEach((part, i) => {
       const angle = (i / cfdParts.length) * Math.PI * 2;
       const orbit = 0.75 + explode * 1.13;
@@ -219,10 +222,11 @@ export function createAtlas(viewport, onSelect) {
   }
 
   function setMode(value) {
-    if (!['anatomy', 'analogy', 'cfd'].includes(value)) return;
+    if (!['anatomy', 'analogy', 'cfd', 'builder'].includes(value)) return;
     mode = value;
-    brain.visible = mode !== 'cfd';
+    brain.visible = mode === 'anatomy' || mode === 'analogy';
     workshop.visible = mode === 'cfd';
+    assembly.root.visible = mode === 'builder';
     cfdBase.visible = cfdSettings.view === 'hardware';
     orbitRing.visible = mode !== 'cfd';
     layout();
@@ -235,6 +239,9 @@ export function createAtlas(viewport, onSelect) {
   }
 
   function setMotion(value) { motion = Boolean(value); }
+  function setAssembly(model) { assembly.build(model); }
+  function setAssemblySelection(id) { assembly.setSelected(id); }
+  function exportAssemblyGLB() { return assembly.exportGLB(); }
 
   function setHemisphere(value) {
     hemisphereView = ['left','right','both'].includes(value) ? value : 'both';
@@ -269,6 +276,11 @@ export function createAtlas(viewport, onSelect) {
     if (box.width <= 0 || box.height <= 0) return;
     pointer.set((event.clientX - box.left) / box.width * 2 - 1, -(event.clientY - box.top) / box.height * 2 + 1);
     ray.setFromCamera(pointer, camera);
+    if (mode === 'builder') {
+      const id = assembly.pick(ray);
+      if (id) onSelectAssembly(id);
+      return;
+    }
     const hit = ray.intersectObjects(targets, false)[0];
     if (hit?.object?.userData?.regionId) onSelect(hit.object.userData.regionId);
   }
@@ -293,6 +305,7 @@ export function createAtlas(viewport, onSelect) {
     if (disposed) return;
     const delta = Math.min(0.05, clock.getDelta());
     if (motion) {
+      if (mode === 'builder') assembly.tick(delta, motion);
       if (mode === 'cfd') {
         cfdBase.rotation.y += delta * (0.03 + (cfdSettings.spin / 100) * 0.42);
         cfdBase.rotation.x += delta * (cfdSettings.spin / 100) * 0.08;
@@ -320,11 +333,12 @@ export function createAtlas(viewport, onSelect) {
     canvas.removeEventListener('pointerdown', down);
     canvas.removeEventListener('pointerup', up);
     orbit.dispose();
+    assembly.dispose();
     geometryResources.forEach((resource) => resource.dispose());
     materials.forEach((material) => material.dispose());
     renderer.dispose();
     canvas.remove();
   }
 
-  return { setSelected, setMode, setExplode, setMotion, setHemisphere, setCFDSettings, reset, dispose, get motion() { return motion; } };
+  return { setSelected, setMode, setExplode, setMotion, setHemisphere, setCFDSettings, setAssembly, setAssemblySelection, exportAssemblyGLB, reset, dispose, get motion() { return motion; } };
 }
