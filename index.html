@@ -26,7 +26,7 @@
         <span class="brand-mark" aria-hidden="true">Φ</span>
         <span><strong>BIOPHI<span class="brand-numeric">369</span></strong><small>THE BIOLOGICAL COMPUTER</small></span>
       </a>
-      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 02</span></span>
+      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 03</span></span>
     </header>
 
     <main>
@@ -41,6 +41,7 @@
         <button class="mode-tab active" type="button" data-mode="anatomy" aria-pressed="true"><span class="mode-glyph">01</span> Anatomy atlas</button>
         <button class="mode-tab" type="button" data-mode="analogy" aria-pressed="false"><span class="mode-glyph">02</span> Computer analogy</button>
         <button class="mode-tab" type="button" data-mode="cfd" aria-pressed="false"><span class="mode-glyph">03</span> CFD workshop</button>
+        <button class="mode-tab" type="button" data-mode="builder" aria-pressed="false"><span class="mode-glyph">04</span> Engineering bridge</button>
       </nav>
 
       <div class="workspace">
@@ -143,6 +144,85 @@
               <p id="cfd-status" class="cfd-status" role="status" aria-live="polite">Your frames are saved in this browser when storage is available. Export a JSON file to back them up.</p>
             </section>
           </section>
+          <section id="assembly-panel" class="assembly-panel" aria-labelledby="assembly-heading" hidden>
+            <div class="assembly-head">
+              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.3</div>
+                <h2 id="assembly-heading">Imagination → engineering</h2>
+                <p>Make a 3D assembly, inspect components, animate independent rotations, and save editable designs. <strong>Conceptual design only.</strong> There is no contact, stress, or collision solver.</p></div>
+              <span class="cfd-badge">EXPERIMENTAL CAD</span>
+            </div>
+            <div class="assembly-grid">
+              <div class="assembly-col">
+                <div class="label">01 / COMPONENT PALETTE</div>
+                <div class="shape-palette" role="group" aria-label="Add a component">
+                  <button type="button" data-shape="gear">⚙ Gear</button>
+                  <button type="button" data-shape="ring">◎ Ring</button>
+                  <button type="button" data-shape="shaft">┃ Shaft</button>
+                  <button type="button" data-shape="block">▣ Block</button>
+                  <button type="button" data-shape="bubble">◌ Bubble</button>
+                </div>
+                <p class="assembly-minor">Select a component in the list or tap a 3D shape. Maximum 24 parts.</p>
+                <div class="label">02 / ASSEMBLY TREE <span id="assembly-count" class="mini-count">2 / 24</span></div>
+                <div id="assembly-list" class="assembly-list" role="group" aria-label="Assembly components"></div>
+                <div class="assembly-actions">
+                  <button type="button" class="action secondary" id="assembly-duplicate">Duplicate selected</button>
+                  <button type="button" class="action secondary" id="assembly-delete">Delete selected</button>
+                </div>
+                <div class="label spacer-label">03 / VISUAL CONNECTIONS</div>
+                <div class="connection-row">
+                  <label for="assembly-link-target" class="visually-hidden">Target component</label>
+                  <select id="assembly-link-target" aria-label="Component to visually connect"></select>
+                  <button type="button" class="action" id="assembly-connect">Link</button>
+                </div>
+                <ul id="assembly-links" class="assembly-links" aria-label="Connections"></ul>
+              </div>
+              <div class="assembly-col">
+                <div class="label">04 / COMPONENT INSPECTOR</div>
+                <div class="assembly-inspector" id="assembly-inspector">
+                  <label>Part name <input id="assembly-name" type="text" maxlength="60" placeholder="Select a component"></label>
+                  <div class="assembly-fields">
+                    <fieldset><legend>Position · scene units</legend>
+                      <label>X <input data-assembly-field="position.x" type="number" min="-8" max="8" step="0.1"></label>
+                      <label>Y <input data-assembly-field="position.y" type="number" min="-8" max="8" step="0.1"></label>
+                      <label>Z <input data-assembly-field="position.z" type="number" min="-8" max="8" step="0.1"></label>
+                    </fieldset>
+                    <fieldset><legend>Rotation · degrees</legend>
+                      <label>X <input data-assembly-field="rotation.x" type="number" min="-360" max="360" step="5"></label>
+                      <label>Y <input data-assembly-field="rotation.y" type="number" min="-360" max="360" step="5"></label>
+                      <label>Z <input data-assembly-field="rotation.z" type="number" min="-360" max="360" step="5"></label>
+                    </fieldset>
+                  </div>
+                  <div class="assembly-fields scalar-fields">
+                    <label>Scale <input data-assembly-field="size" type="number" min="0.2" max="3" step="0.1"></label>
+                    <label>RPM <input data-assembly-field="rpm" type="number" min="-120" max="120" step="1"></label>
+                    <label id="teeth-control">Gear teeth <input data-assembly-field="teeth" type="number" min="8" max="40" step="1"></label>
+                  </div>
+                  <p class="assembly-minor">Motion is a visual rotation about each part's local Y axis. Links are annotations, not mechanical joints. Rotation and exported GLB use the design's rest pose.</p>
+                </div>
+                <div class="label spacer-label">05 / ASSEMBLY KEYFRAMES</div>
+                <div class="capture-row">
+                  <label class="visually-hidden" for="assembly-frame-label">Name an assembly keyframe</label>
+                  <input id="assembly-frame-label" type="text" maxlength="60" placeholder="Frame label (optional)">
+                  <button id="assembly-capture" class="action" type="button">+ Capture</button>
+                </div>
+                <ol id="assembly-frames" class="frame-list" aria-label="Saved assembly keyframes"></ol>
+                <div class="recorder-buttons">
+                  <button type="button" id="assembly-play" class="action">▶ Play</button>
+                  <button type="button" id="assembly-stop" class="action secondary">■ Stop</button>
+                  <button type="button" id="assembly-clear-frames" class="action secondary">Clear frames</button>
+                </div>
+                <div class="label spacer-label">06 / EXPORT &amp; IMPORT</div>
+                <div class="recorder-buttons">
+                  <button type="button" id="assembly-export-json" class="action secondary">Export JSON</button>
+                  <button type="button" id="assembly-import" class="action secondary">Import JSON</button>
+                  <button type="button" id="assembly-export-glb" class="action">Export .GLB</button>
+                  <input type="file" id="assembly-import-file" class="visually-hidden" accept=".json,application/json" aria-label="Import saved assembly">
+                </div>
+              </div>
+            </div>
+            <p class="assembly-status" id="assembly-status" role="status" aria-live="polite">Two example gears are ready. Add a part or select a shape to edit.</p>
+            <p class="assembly-minor"><strong>Integrity boundary:</strong> Exported GLB is an editable mesh scene suitable for tools supporting glTF 2.0, including Blender. No tolerance, tooth contact, structural or safety claim is made. Third-party app support requires independent validation.</p>
+          </section>
         </section>
 
         <aside class="panel detail-panel" aria-labelledby="detail-name">
@@ -182,7 +262,7 @@
           <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
         </article>
         <article class="note-card">
-          <div class="label">FIELD NOTES / 002</div>
+          <div class="label">FIELD NOTES / 003</div>
           <h2>From visualization to design.</h2>
           <p>CFD mode now lets you adjust procedural geometry and record design keyframes. Captured configurations remain visual experiments, and imagined mechanisms still need engineering tests.</p>
         </article>
