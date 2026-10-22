@@ -21,10 +21,19 @@ const step=async (name,fn)=>{
   checks.push({name,result:'PASS'});
   console.log('PASS '+name);
 };
-const waitText=(locator,expression,ms=15000)=>locator.waitFor({state:'visible',timeout:ms}).then(async()=>{
-  const text=await locator.textContent();
-  assert.match(text||'',expression);
-});
+async function waitText(locator,expression,ms=15000){
+  await locator.waitFor({state:'visible',timeout:ms});
+  const start=Date.now();
+  let latest='';
+  // Status messages can follow async browser file reads. Waiting merely for
+  // a visible element races the update and produces false CI failures.
+  while(Date.now()-start<ms){
+    latest=(await locator.textContent())||'';
+    if(expression.test(latest))return latest;
+    await new Promise(resolve=>setTimeout(resolve,100));
+  }
+  assert.match(latest,expression);
+}
 async function triggerRange(selector,value){
   await page.locator(selector).evaluate((input,next)=>{
     input.value=String(next);
@@ -135,6 +144,18 @@ try {
     await page.setViewportSize({width:390,height:844});
     await page.waitForTimeout(100);
     const widths=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth}));
+    if(widths.document>widths.viewport+3){
+      const offenders=await page.evaluate(()=>{
+        return [...document.querySelectorAll('body *')]
+          .map(el=>({selector:el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+
+              (typeof el.className==='string'&&el.className?'.'+el.className.trim().split(/\\s+/).join('.'):''),
+            left:Math.round(el.getBoundingClientRect().left),
+            right:Math.round(el.getBoundingClientRect().right)}))
+          .filter(item=>item.right>innerWidth+4&&item.left>=0)
+          .sort((a,b)=>b.right-a.right).slice(0,12);
+      });
+      console.error('Mobile horizontal overflow elements:',JSON.stringify(offenders));
+    }
     assert.ok(widths.document<=widths.viewport+3,JSON.stringify(widths));
   });
 
