@@ -242,3 +242,30 @@ a{color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-vis
 .bridge-boundary strong{color:#f2d5ac}
 @media(max-width:960px){.bridge-destinations{grid-template-columns:1fr}.bridge-destination{padding:15px}}
 @media(max-width:470px){.bridge-panel{padding:13px}.bridge-head .twin-status-tag{font-size:8px}.bridge-destination{padding:13px}.bridge-panel select{width:100%}}
+
+/* v0.8 reviewed, operator-controlled Framefield returns. */
+.roundtrip-panel{margin-top:22px;padding:23px;min-width:0;border:1px solid #76847e;background:linear-gradient(145deg,#172d34,#1c2630);border-radius:10px}
+.roundtrip-panel h3{font-size:clamp(21px,3vw,28px);margin:8px 0}
+.roundtrip-panel h3 small{font-size:11px;color:#a8ddce}
+.roundtrip-panel>p{font-size:12px;line-height:1.7;color:#bbccd5;overflow-wrap:anywhere}
+.roundtrip-panel code{padding:2px 5px;color:#e0d9af;background:#263539;border-radius:4px}
+.roundtrip-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:13px 0}
+.roundtrip-actions .action{flex:0 1 auto;min-width:190px;max-width:100%}
+.roundtrip-actions .action:disabled{cursor:not-allowed;opacity:.45}
+.roundtrip-actions span{font-size:12px;color:#c4d8df}
+.roundtrip-review{margin-top:15px;padding:16px;border:1px solid #445f6d;background:#101f2b;border-radius:8px}
+.roundtrip-review h4{font-size:16px;margin:0 0 8px}
+.roundtrip-summary{font-size:12px;color:#c3d8da;line-height:1.7}
+.roundtrip-diffs{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:9px;margin:15px 0;padding:0;list-style:none}
+.roundtrip-row,.roundtrip-diffs>.roundtrip-warning{min-width:0;background:#152a38;border:1px solid #3d6170;border-radius:7px;padding:12px;color:#e3eee9}
+.roundtrip-row.blocked,.roundtrip-diffs>.roundtrip-warning{background:#322921;border-color:#967859;color:#eed0ab}
+.roundtrip-row-head{display:flex;align-items:flex-start;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.roundtrip-row-head strong{font-size:12px}
+.roundtrip-row-head span{color:#b2cbd0;font-size:11px}
+.roundtrip-row-head label{display:flex;gap:7px;align-items:center;font-size:11px;cursor:pointer}
+.roundtrip-row-head input{width:18px;height:18px;accent-color:#86d7c3}
+.roundtrip-delta{font-size:11px;overflow-wrap:anywhere;color:#aadbcf}
+.roundtrip-warning{font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.roundtrip-row .roundtrip-warning{color:#f2d6a7}
+.roundtrip-status{background:#243539;border:1px solid #64887d;border-radius:7px;color:#ecf7ed!important;padding:12px 14px;line-height:1.7}
+@media(max-width:620px){.roundtrip-panel{padding:12px}.roundtrip-review{padding:10px}.roundtrip-diffs{grid-template-columns:1fr}.roundtrip-actions .action{width:100%;flex:1 1 100%}}

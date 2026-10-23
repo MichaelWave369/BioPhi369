@@ -216,6 +216,53 @@ try {
     assert.equal(JSON.parse(entries.get('biophi.assembly.json').toString()).format,'BioPhi369-Assembly');
   });
 
+  await step('Returned Framefield JSON previews changes without mutating BioPhi',async()=>{
+    const promise=page.waitForEvent('download');
+    await page.locator('#bridge-export-framefield').click();
+    const download=await promise;
+    const scene=JSON.parse(await readFile(await download.path(),'utf8'));
+    assert.match(scene.objects[0].name,/^\[BP369:part-1\]/);
+    // Mimic Framefield Studio recreating UUIDs, retaining the name tag.
+    scene.objects.forEach((obj,index)=>obj.id='generated-in-framefield-'+index);
+    const rest=scene.objects[0].keyframes.find(k=>k.frame===0);
+    rest.position[0]=1.25;
+    scene.objects[0].name='[BP369:part-1] Edited drive';
+    const typed=Buffer.from(JSON.stringify(scene));
+    await page.locator('#roundtrip-file').setInputFiles({name:'edited.framefield.json',mimeType:'application/json',buffer:typed});
+    await waitText(page.locator('#roundtrip-summary'),/2 tagged objects matched.*1 editable component/);
+    assert.equal(await page.locator('#roundtrip-apply').isDisabled(),true);
+    await page.locator('.assembly-part').filter({hasText:'Drive gear'}).click();
+    assert.notEqual(await page.locator('[data-assembly-field="position.x"]').inputValue(),'1.25');
+    assert.equal(await page.locator('#roundtrip-diffs input[type="checkbox"]').count(),1);
+    await page.locator('#roundtrip-diffs input[type="checkbox"]').check();
+    assert.equal(await page.locator('#roundtrip-apply').isDisabled(),false);
+  });
+
+  await step('Approved Framefield changes apply selectively and rollback restores original',async()=>{
+    const originalX=await page.locator('[data-assembly-field="position.x"]').inputValue();
+    await page.locator('#roundtrip-apply').click();
+    await waitText(page.locator('#roundtrip-status'),/Committed 1 explicitly approved/);
+    assert.equal(await page.locator('[data-assembly-field="position.x"]').inputValue(),'1.25');
+    assert.equal(await page.locator('#roundtrip-restore').isDisabled(),false);
+    await page.locator('#roundtrip-restore').click();
+    await waitText(page.locator('#roundtrip-status'),/Restored the pre-round-trip/);
+    assert.equal(await page.locator('[data-assembly-field="position.x"]').inputValue(),originalX);
+  });
+
+  await step('Untagged legacy Framefield scenes cannot auto-apply edits',async()=>{
+    const promise=page.waitForEvent('download');
+    await page.locator('#bridge-export-framefield').click();
+    const download=await promise;
+    const scene=JSON.parse(await readFile(await download.path(),'utf8'));
+    scene.objects[0].name='Drive gear';
+    scene.objects[0].keyframes[0].position[0]=2;
+    const typed=Buffer.from(JSON.stringify(scene));
+    await page.locator('#roundtrip-file').setInputFiles({name:'legacy.json',mimeType:'application/json',buffer:typed});
+    await waitText(page.locator('#roundtrip-summary'),/unmapped\/identity notice/);
+    assert.equal(await page.locator('#roundtrip-apply').isDisabled(),true);
+    assert.notEqual(await page.locator('[data-assembly-field="position.x"]').inputValue(),'2');
+  });
+
   await step('Narrow viewport has no page-level horizontal overflow',async()=>{
     await page.setViewportSize({width:390,height:844});
     await page.waitForTimeout(100);

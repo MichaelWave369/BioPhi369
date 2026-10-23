@@ -26,7 +26,7 @@
         <span class="brand-mark" aria-hidden="true">Φ</span>
         <span><strong>BIOPHI<span class="brand-numeric">369</span></strong><small>THE BIOLOGICAL COMPUTER</small></span>
       </a>
-      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 07</span></span>
+      <span class="status"><span class="status-dot"></span> INTERACTIVE RESEARCH ATLAS <span class="edition">/ 08</span></span>
     </header>
 
     <main>
@@ -146,7 +146,7 @@
           </section>
           <section id="assembly-panel" class="assembly-panel" aria-labelledby="assembly-heading" hidden>
             <div class="assembly-head">
-              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.7</div>
+              <div><div class="label">BIOPHI369 / DESIGN STUDIO v0.8</div>
                 <h2 id="assembly-heading">Imagination → engineering</h2>
                 <p>Make a 3D assembly, inspect components, animate independent rotations, and save editable designs. <strong>Conceptual design only.</strong> Reality Check adds approximate spacing screens, not a contact, stress, or collision solver.</p></div>
               <span class="cfd-badge">EXPERIMENTAL CAD</span>
@@ -331,6 +331,30 @@
               <p id="bridge-status" class="bridge-status" role="status" aria-live="polite">Ready to export a local creative bridge. Geometry and motion are conceptual and unverified.</p>
               <p class="bridge-boundary"><strong>Compatibility &amp; evidence:</strong> Framefield Studio uses its validated native JSON scene schema; PixelForge supports selected static local GLBs and may reject unsupported geometry. This is not a live API connection, verified manufacturing CAD, or certified digital twin.</p>
             </section>
+            <section id="roundtrip-panel" class="roundtrip-panel" aria-labelledby="roundtrip-heading">
+              <div class="bridge-head">
+                <div><div class="label">10 / REVIEW BEFORE REIMPORT</div>
+                <h3 id="roundtrip-heading">Round-Trip Laboratory <small>v0.8</small></h3></div>
+                <span class="twin-status-tag">NO SILENT OVERWRITES</span>
+              </div>
+              <p>Export a <strong>new BioPhi v0.8 Framefield scene</strong>, edit it in Framefield Studio, save its JSON, and bring it back here. Each component identity is anchored by a persistent <code>[BP369:part-N]</code> name prefix. Framefield recreates internal object IDs, so the prefix must be preserved.</p>
+              <div class="roundtrip-actions">
+                <button type="button" id="roundtrip-open" class="action">Inspect returned Framefield JSON</button>
+                <input type="file" id="roundtrip-file" class="visually-hidden" aria-label="Select Framefield scene to review" accept=".json,application/json">
+                <button type="button" id="roundtrip-restore" class="action secondary" disabled>Restore last pre-import backup</button>
+              </div>
+              <div class="roundtrip-review">
+                <h4>Change preview</h4>
+                <p id="roundtrip-summary" class="roundtrip-summary">Load a scene to preview changes. Nothing is applied automatically.</p>
+                <ul id="roundtrip-diffs" class="roundtrip-diffs" aria-label="Reviewed part changes"></ul>
+                <div class="roundtrip-actions">
+                  <span id="roundtrip-selection-count">0 component(s) selected</span>
+                  <button type="button" id="roundtrip-apply" class="action" disabled>Apply approved changes only</button>
+                </div>
+              </div>
+              <p id="roundtrip-status" class="roundtrip-status" role="status" aria-live="polite">Ready to inspect a returned Framefield project.</p>
+              <p class="bridge-boundary"><strong>Supported:</strong> position, rotation, uniform size and tagged part name at Framefield keyframe 0. <strong>Not imported:</strong> custom edited meshes, nonuniform scaling, animation curves and later keyframes, extra/missing objects, RPMs, gear tooth count or physical constraints. Original links and assembly frames are preserved. Apply requires explicit selection and a verified local rollback.</p>
+            </section>
             <p class="assembly-status" id="assembly-status" role="status" aria-live="polite">Two example gears are ready. Add a part or select a shape to edit.</p>
             <p class="assembly-minor"><strong>Integrity boundary:</strong> Exported GLB is an editable mesh scene suitable for tools supporting glTF 2.0, including Blender. No tolerance, tooth contact, structural or safety claim is made. Third-party app support requires independent validation.</p>
           </section>
@@ -373,7 +397,7 @@
           <p>Thinking, mental imagery and spatial manipulation recruit interacting systems. These connections are useful analogies, not one-to-one maps from silicon to neurons.</p>
         </article>
         <article class="note-card">
-          <div class="label">FIELD NOTES / 007</div>
+          <div class="label">FIELD NOTES / 008</div>
           <h2>From visualization to design.</h2>
           <p>Our CFD and assembly tools can now produce reproducible visual motion previews and provenance-tagged Reality Ledger receipts. Geometric screening remains experimental, and physical designs need independent engineering verification.</p>
         </article>

@@ -1,5 +1,18 @@
 # BioPhi369 · The Biological Computer
 
+## v0.8 · Round-Trip Laboratory
+
+This is **review-before-apply interoperability**, not arbitrary import or lossless CAD exchange.
+
+- Fresh **v0.8 Framefield JSON exports** prefix every part's editable name with its stable tag `[BP369:part-N]`. Framefield Studio's native `validateProject()` replaces object UUIDs at import time, so name tags are required to map a returned scene back to the BioPhi source. Keep the tag when renaming objects in Framefield. Previously exported untagged v0.7 JSON cannot auto-match parts; export a fresh tagged file.
+- **Inspect returned Framefield JSON** loads a bounded, untrusted local JSON file (3 MB max, 100 objects / 600 frames / 800 vertices / 1200 faces per mesh) and performs a pure diff against the live BioPhi assembly. Nothing is changed during import or preview. Duplicate identity tags globally block acceptance; missing tag/part or missing objects are reported, never guessed by approximate name.
+- Only **frame-0 world position XYZ, rotation XYZ, approximately uniform primitive scale → scalar size, and explicitly tagged part name** can be applied. Out-of-range values, wrong primitive types, missing rest frames, nonuniform sizes block the affected part. Later animation, editable geometry, modifiers, links, gear teeth, RPM and added/deleted objects are never imported. Untranslatable geometry is shown as a warning rather than silently treated as supported.
+- **Explicit per-component approval**, not select-all. The review is bound to the original BioPhi document snapshot and rejects stale reviews after any assembly changes. Accepted patches use the existing validated `patchComponent` path, preserve links and saved assembly keyframes, and save a verified browser-local **pre-import rollback snapshot** before committing.
+- **Restore last pre-import backup** switches back to the previously verified BioPhi JSON; local browser storage must be available to permit applying returned changes. Nothing is sent to FramefieldStudio or PixelForge.
+- Pure Node negative controls for tampered IDs, duplicates, untagged legacy files, blocked shapes/scales, unsupported topology changes, bounds, stale preview, source immutability, original links/keyframes, long names and out-of-range payloads. Expanded Chromium suite covers preview-only behavior, explicit apply and rollback using exported Framefield JSON.
+
+**Verification limits:** This round-trip deliberately does not transfer Framefield custom mesh edits or its animated timeline back to BioPhi. Geometry differences remain unresolved and must be recreated manually. SHA-256 handoff integrity checks are not physical/mechanical validation. The only accepted returned changes are reviewed conceptual scene transforms and tagged names.
+
 ## v0.7 · Creative Engineering Bridge
 
 **Interoperability verified against source contracts** in [FramefieldStudio](https://github.com/MichaelWave369/FramefieldStudio) and [Parallax PixelForge](https://github.com/MichaelWave369/parallax-pixelforge). All handoffs are **operator-downloaded local files**. No automatic remote import, authentication, service access or cross-site project mutation occurs.
